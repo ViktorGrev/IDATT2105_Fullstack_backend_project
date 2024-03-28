@@ -3,7 +3,7 @@ package edu.ntnu.idatt2105.trivium.service;
 import edu.ntnu.idatt2105.trivium.dto.security.CredentialsRequest;
 import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
-import edu.ntnu.idatt2105.trivium.model.User;
+import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService {
    * {@inheritDoc}
    */
   @Override
-  public User registerUser(CredentialsRequest request) {
-    String encodedPassword = passwordEncoder.encode(request.getPassword());
-    User user = new User(request.getUsername(), encodedPassword);
+  public User registerUser(String username, String password) {
+    String encodedPassword = passwordEncoder.encode(password);
+    User user = new User(username, encodedPassword);
     userRepository.insert(user);
     return user;
   }
@@ -37,11 +37,11 @@ public class UserServiceImpl implements UserService {
    * {@inheritDoc}
    */
   @Override
-  public User loginUser(CredentialsRequest request) {
-    Optional<User> optionalUser = findByUsername(request.getUsername());
+  public User loginUser(String username, String password) {
+    Optional<User> optionalUser = findByUsername(username);
     if (optionalUser.isPresent()) {
       User user = optionalUser.get();
-      boolean match = passwordEncoder.matches(request.getPassword(), user.getPassword());
+      boolean match = passwordEncoder.matches(password, user.getPassword());
       if (match) {
         return user;
       } else {

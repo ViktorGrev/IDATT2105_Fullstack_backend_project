@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2105.trivium.dto.security;
 
-import edu.ntnu.idatt2105.trivium.model.User;
+import edu.ntnu.idatt2105.trivium.model.user.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

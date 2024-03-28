@@ -2,7 +2,7 @@ package edu.ntnu.idatt2105.trivium.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import edu.ntnu.idatt2105.trivium.model.User;
+import edu.ntnu.idatt2105.trivium.model.user.User;
 
 import java.time.Duration;
 import java.time.Instant;

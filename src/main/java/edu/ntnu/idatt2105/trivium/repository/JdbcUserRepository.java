@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2105.trivium.repository;
 
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
-import edu.ntnu.idatt2105.trivium.model.User;
+import edu.ntnu.idatt2105.trivium.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -25,7 +25,7 @@ public class JdbcUserRepository implements UserRepository {
       client.sql("INSERT INTO user (username, password) VALUES (:username, :password)")
           .param("username", user.getUsername())
           .param("password", user.getPassword())
-          .update(keyHolder, "user_id");
+          .update(keyHolder, "id");
       if (keyHolder.getKey() != null) {
         user.setId(keyHolder.getKey().intValue());
       }

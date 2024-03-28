@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2105.trivium.model;
+package edu.ntnu.idatt2105.trivium.model.user;
 
 import lombok.Data;
 

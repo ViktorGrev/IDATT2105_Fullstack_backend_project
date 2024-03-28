@@ -5,7 +5,7 @@ import edu.ntnu.idatt2105.trivium.dto.security.CredentialsRequest;
 import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
-import edu.ntnu.idatt2105.trivium.model.User;
+import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.security.TokenUtils;
 import edu.ntnu.idatt2105.trivium.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +37,8 @@ public class AuthController {
    * @throws UserNotFoundException if the user is not found.
    */
   @PostMapping(value = "/login")
-  public ResponseEntity<AuthResponse> login(final @Validated @RequestBody CredentialsRequest request) {
-    User user = userService.loginUser(request);
+  public ResponseEntity<AuthResponse> login(@Validated @RequestBody CredentialsRequest request) {
+    User user = userService.loginUser(request.getUsername(), request.getPassword());
     String token = TokenUtils.generateToken(user);
     return ResponseEntity.ok(new AuthResponse(token));
   }
@@ -51,8 +51,8 @@ public class AuthController {
    * @throws UserAlreadyExistsException if the user already exists.
    */
   @PostMapping(value = "/signup")
-  public ResponseEntity<AuthResponse> signup(final @Validated @RequestBody CredentialsRequest request) {
-    User user = userService.registerUser(request);
+  public ResponseEntity<AuthResponse> signup(@Validated @RequestBody CredentialsRequest request) {
+    User user = userService.registerUser(request.getUsername(), request.getPassword());
     String token = TokenUtils.generateToken(user);
     return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token));
   }

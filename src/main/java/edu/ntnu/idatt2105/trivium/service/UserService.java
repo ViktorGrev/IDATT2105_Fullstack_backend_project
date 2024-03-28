@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2105.trivium.service;
 
-import edu.ntnu.idatt2105.trivium.dto.security.CredentialsRequest;
-import edu.ntnu.idatt2105.trivium.model.User;
+import edu.ntnu.idatt2105.trivium.model.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,20 +12,22 @@ import java.util.Optional;
 public interface UserService {
 
   /**
-   * Registers a new user with the provided credentials.
+   * Registers a new user with the provided username and password.
    *
-   * @param request The request containing user credentials.
+   * @param username The username of the user to register.
+   * @param password The password of the user to register.
    * @return The registered user.
    */
-  User registerUser(CredentialsRequest request);
+  User registerUser(String username, String password);
 
   /**
-   * Logs in a user with the provided credentials.
+   * Logs in a user with the provided username and password.
    *
-   * @param request The request containing user credentials.
+   * @param username The username of the user to login.
+   * @param password The password of the user to login.
    * @return The logged-in user.
    */
-  User loginUser(CredentialsRequest request);
+  User loginUser(String username, String password);
 
   /**
    * Finds a user by their username.
