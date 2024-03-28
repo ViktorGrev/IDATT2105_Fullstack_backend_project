@@ -5,6 +5,8 @@ import edu.ntnu.idatt2105.trivium.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
@@ -17,12 +19,16 @@ public class JdbcUserRepository implements UserRepository {
   private JdbcClient client;
 
   @Override
-  public void registerUser(String username, String password) {
+  public void insert(User user) {
     try {
+      KeyHolder keyHolder = new GeneratedKeyHolder();
       client.sql("INSERT INTO user (username, password) VALUES (:username, :password)")
-          .param("username", username)
-          .param("password", password)
-          .update();
+          .param("username", user.getUsername())
+          .param("password", user.getPassword())
+          .update(keyHolder, "user_id");
+      if (keyHolder.getKey() != null) {
+        user.setId(keyHolder.getKey().intValue());
+      }
     } catch (DataAccessException e) {
       if (e.getCause() instanceof SQLException sqlException) {
         if (sqlException.getErrorCode() == 1062) {

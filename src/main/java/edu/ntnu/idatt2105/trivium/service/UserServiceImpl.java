@@ -28,8 +28,9 @@ public class UserServiceImpl implements UserService {
   @Override
   public User registerUser(CredentialsRequest request) {
     String encodedPassword = passwordEncoder.encode(request.getPassword());
-    userRepository.registerUser(request.getUsername(), encodedPassword);
-    return new User(request.getUsername(), encodedPassword);
+    User user = new User(request.getUsername(), encodedPassword);
+    userRepository.insert(user);
+    return user;
   }
 
   /**

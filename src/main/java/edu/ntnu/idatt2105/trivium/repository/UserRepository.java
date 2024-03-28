@@ -8,7 +8,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository {
 
-  void registerUser(String username, String password);
+  void insert(User user);
 
   Optional<User> findByUsername(String username);
 }
