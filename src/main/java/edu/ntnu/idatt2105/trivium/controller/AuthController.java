@@ -1,8 +1,7 @@
 package edu.ntnu.idatt2105.trivium.controller;
 
 import edu.ntnu.idatt2105.trivium.dto.security.AuthResponse;
-import edu.ntnu.idatt2105.trivium.dto.security.LoginRequest;
-import edu.ntnu.idatt2105.trivium.dto.security.SignUpRequest;
+import edu.ntnu.idatt2105.trivium.dto.security.CredentialsRequest;
 import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
@@ -13,15 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
 
 /**
  * Controller handling authentication-related requests.
  */
+@Validated
 @CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
@@ -30,52 +27,33 @@ public class AuthController {
 
   @Autowired
   private UserService userService;
-  @Autowired
-  private PasswordEncoder passwordEncoder;
 
   /**
    * Handles user login requests.
    *
-   * @param request The login request containing username and password.
+   * @param request The login request.
    * @return ResponseEntity containing the authentication response.
-   * @throws ResponseStatusException if authentication fails due to invalid credentials or user not found.
+   * @throws InvalidCredentialsException if the provided credentials are invalid.
+   * @throws UserNotFoundException if the user is not found.
    */
   @PostMapping(value = "/login")
-  @ResponseStatus(value = HttpStatus.CREATED)
-  public ResponseEntity<AuthResponse> login(final @RequestBody LoginRequest request) throws ResponseStatusException {
-    Optional<User> optionalUser = userService.findByUsername(request.getUsername());
-    if (optionalUser.isPresent()) {
-      User user = optionalUser.get();
-      boolean match = passwordEncoder.matches(request.getPassword(), user.getPassword());
-      if (match) {
-        String token = TokenUtils.generateToken(user);
-        return ResponseEntity.ok(new AuthResponse(token));
-      } else {
-        throw new InvalidCredentialsException();
-      }
-    } else {
-      throw new UserNotFoundException();
-    }
+  public ResponseEntity<AuthResponse> login(final @Validated @RequestBody CredentialsRequest request) {
+    User user = userService.loginUser(request);
+    String token = TokenUtils.generateToken(user);
+    return ResponseEntity.ok(new AuthResponse(token));
   }
 
   /**
    * Handles user signup requests.
    *
-   * @param request The signup request containing username and password.
+   * @param request The signup request.
    * @return ResponseEntity containing the authentication response.
-   * @throws ResponseStatusException if signup fails due to user already existing.
+   * @throws UserAlreadyExistsException if the user already exists.
    */
   @PostMapping(value = "/signup")
-  public ResponseEntity<AuthResponse> signup(final @RequestBody SignUpRequest request) {
-    Optional<User> optionalUser = userService.findByUsername(request.getUsername());
-    if (optionalUser.isEmpty()) {
-      String password = passwordEncoder.encode(request.getPassword());
-      User user = new User(request.getUsername(), password);
-      userService.insert(user);
-      String token = TokenUtils.generateToken(user);
-      return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token));
-    } else {
-      throw new UserAlreadyExistsException();
-    }
+  public ResponseEntity<AuthResponse> signup(final @Validated @RequestBody CredentialsRequest request) {
+    User user = userService.registerUser(request);
+    String token = TokenUtils.generateToken(user);
+    return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token));
   }
 }
