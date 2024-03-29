@@ -1,12 +1,19 @@
 package edu.ntnu.idatt2105.trivium.model.user;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
+@Entity
+@Table(name = "user")
 public class User {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
+  @Column(name = "username", length = 16, unique = true, nullable = false)
   private String username;
+  @Column(name = "password", length = 80, nullable = false)
   private String password;
 
   public User() {

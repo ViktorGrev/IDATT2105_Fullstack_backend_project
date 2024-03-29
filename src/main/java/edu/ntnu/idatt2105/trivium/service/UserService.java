@@ -3,8 +3,6 @@ package edu.ntnu.idatt2105.trivium.service;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 /**
  * Service interface defining operations related to user management.
  */
@@ -33,7 +31,7 @@ public interface UserService {
    * Finds a user by their username.
    *
    * @param username The username of the user to find.
-   * @return An Optional containing the user, or empty if not found.
+   * @return A user.
    */
-  Optional<User> findByUsername(String username);
+  User findByUsername(String username);
 }
