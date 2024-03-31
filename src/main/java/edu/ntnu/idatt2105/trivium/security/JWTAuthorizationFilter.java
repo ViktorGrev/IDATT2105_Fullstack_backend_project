@@ -51,10 +51,15 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     String token = header.substring(7);
     final DecodedJWT decodedJWT = validateToken(token);
-    String userId = decodedJWT.getSubject();
+    if (decodedJWT == null) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+    long userId = decodedJWT.getClaim("user_id").asLong();
+    String username = decodedJWT.getSubject();
 
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-        userId, null, Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER)));
+        new AuthIdentity(userId, username), null, Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER)));
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     filterChain.doFilter(request, response);

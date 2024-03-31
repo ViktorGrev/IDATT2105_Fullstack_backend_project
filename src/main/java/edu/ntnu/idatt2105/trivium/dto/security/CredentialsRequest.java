@@ -13,8 +13,7 @@ import lombok.Data;
 public class CredentialsRequest {
 
   @Size(
-      min = User.Config.MIN_USERNAME_LENGTH,
-      max = User.Config.MAX_USERNAME_LENGTH,
+      min = User.Config.MIN_USERNAME_LENGTH, max = User.Config.MAX_USERNAME_LENGTH,
       message = "Username must be between {min} and {max} characters")
   @Pattern(
       regexp = User.Config.USERNAME_REGEX,
@@ -23,8 +22,7 @@ public class CredentialsRequest {
   private String username;
 
   @Size(
-      min = User.Config.MIN_PASSWORD_LENGTH,
-      max = User.Config.MAX_PASSWORD_LENGTH,
+      min = User.Config.MIN_PASSWORD_LENGTH, max = User.Config.MAX_PASSWORD_LENGTH,
       message = "Password must be between {min} and {max} characters")
   @Pattern(
       regexp = User.Config.PASSWORD_REGEX,
