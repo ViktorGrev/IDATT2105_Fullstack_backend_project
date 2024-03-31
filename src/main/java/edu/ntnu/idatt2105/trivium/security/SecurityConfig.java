@@ -39,7 +39,7 @@ public class SecurityConfig {
         .cors().and()
         .authorizeHttpRequests(auth -> {
           auth.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-              .requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated();
+              .requestMatchers("/swagger/**", "/api/auth/**").permitAll().anyRequest().authenticated();
         })
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
