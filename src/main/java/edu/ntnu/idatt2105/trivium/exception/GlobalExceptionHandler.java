@@ -7,6 +7,7 @@ import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
+import edu.ntnu.idatt2105.trivium.exception.user.UsernameTakenException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -66,7 +67,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @param e The exception.
    * @return A ResponseEntity containing the error response.
    */
-  @ExceptionHandler(UserAlreadyExistsException.class)
+  @ExceptionHandler({UserAlreadyExistsException.class, UsernameTakenException.class})
   public ResponseEntity<Object> handleConflict(Exception e) {
     return ExceptionResponse.toResponseEntity(HttpStatus.CONFLICT, e.getMessage());
   }

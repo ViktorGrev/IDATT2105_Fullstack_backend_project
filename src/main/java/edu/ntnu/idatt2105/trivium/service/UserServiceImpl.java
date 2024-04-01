@@ -3,6 +3,7 @@ package edu.ntnu.idatt2105.trivium.service;
 import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
+import edu.ntnu.idatt2105.trivium.exception.user.UsernameTakenException;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,25 @@ public class UserServiceImpl implements UserService {
     Optional<User> optionalUser = userRepository.findByUsername(username);
     if (optionalUser.isPresent()) {
       return optionalUser.get();
+    } else {
+      throw new UserNotFoundException();
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public User updateUsername(long userId, String username) {
+    Optional<User> optionalUser = userRepository.findById(userId);
+    if (optionalUser.isPresent()) {
+      User user = optionalUser.get();
+      user.setUsername(username);
+      try {
+        return userRepository.save(user);
+      } catch (DataIntegrityViolationException e) {
+        throw new UsernameTakenException();
+      }
     } else {
       throw new UserNotFoundException();
     }

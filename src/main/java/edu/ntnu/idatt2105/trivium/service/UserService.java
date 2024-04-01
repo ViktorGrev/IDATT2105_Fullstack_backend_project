@@ -34,4 +34,13 @@ public interface UserService {
    * @return A user.
    */
   User findByUsername(String username);
+
+  /**
+   * Updates the username of a user.
+   *
+   * @param userId The ID of the user.
+   * @param username The new username to update.
+   * @return The updated user.
+   */
+  User updateUsername(long userId, String username);
 }
