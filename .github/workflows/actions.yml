@@ -24,5 +24,6 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '21'
+          distribution: 'temurin'
       - name: Build
         run: mvn package
