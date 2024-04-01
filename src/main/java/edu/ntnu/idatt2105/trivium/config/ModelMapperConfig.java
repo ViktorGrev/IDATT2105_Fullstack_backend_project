@@ -20,8 +20,9 @@ public class ModelMapperConfig {
   public ModelMapper modelMapper() {
     ModelMapper modelMapper = new ModelMapper();
 
-    modelMapper.createTypeMap(String.class, Tag.class)
-        .setConverter(context -> Tag.builder().name(context.getSource().toLowerCase()).build());
+    modelMapper.createTypeMap(String.class, Tag.class).setConverter(
+        context -> Tag.builder().name(context.getSource().toLowerCase())
+            .build());
 
     modelMapper.createTypeMap(Tag.class, String.class)
         .setConverter(context -> context.getSource().getName().toLowerCase());
