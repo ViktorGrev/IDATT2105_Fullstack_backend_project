@@ -1,25 +1,26 @@
-name: Test and Upload artifact
+name: Maven Package
 
-on: workflow_dispatch
+on:
+  push:
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build, package and upload .jar artifact
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: 21
-      - name: Build and package project
-        run: mvn install
-      - name: Show contents of the current working directory
-        run: ls -la
-      - name: Show contents of a target directory
-        run: ls -la target
-      - name: Upload Maven build artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: artifact
-          path: ./target/backend-0.0.1-SNAPSHOT.jar
+          java-version: '21'
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Publish to GitHub Packages Apache Maven
+        run: mvn deploy
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
