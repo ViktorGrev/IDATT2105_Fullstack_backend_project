@@ -45,6 +45,9 @@ public class Quiz {
   @JoinColumn(name = "quiz_id", nullable = false)
   private List<Question> questions;
 
+  @Column(name = "random", nullable = false)
+  private boolean random;
+
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "creator_id", nullable = false)
   private User creator;

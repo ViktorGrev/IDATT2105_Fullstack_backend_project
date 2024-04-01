@@ -18,6 +18,7 @@ public class QuizDTO {
   private Quiz.Category category;
   private List<String> tags;
   private List<QuestionDTO> questions;
+  private boolean random;
   private UserDTO creator;
 
 }

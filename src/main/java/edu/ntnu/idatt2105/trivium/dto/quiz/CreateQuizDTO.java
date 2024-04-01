@@ -42,4 +42,7 @@ public class CreateQuizDTO {
   @NotNull(message = "A list of questions is required")
   private List<QuestionDTO> questions;
 
+  @Nullable
+  private boolean random;
+
 }
