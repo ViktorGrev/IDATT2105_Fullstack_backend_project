@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.type.SimpleType;
 import edu.ntnu.idatt2105.trivium.dto.quiz.question.QuestionDTO;
 import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
+import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.user.UsernameTakenException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -45,6 +48,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     FieldError fieldError = e.getFieldError();
     if (fieldError != null) {
       error = fieldError.getDefaultMessage();
+    }
+    return ExceptionResponse.toResponseEntity(HttpStatus.BAD_REQUEST, error);
+  }
+
+  /**
+   * Handles exceptions by returning an {@link HttpStatus#BAD_REQUEST} response.
+   *
+   * @param e The exception.
+   * @return A ResponseEntity containing the error response.
+   */
+  @ExceptionHandler({InvalidAnswerFormatException.class, ConstraintViolationException.class})
+  public ResponseEntity<Object> handleBadRequest(Exception e) {
+    String error = e.getMessage();
+    if (e instanceof ConstraintViolationException constraintViolationException) {
+      System.out.println("A");
+      for (ConstraintViolation<?> violation : constraintViolationException.getConstraintViolations()) {
+        System.out.println("V " + violation.getMessage());
+        error = violation.getMessage();
+        break;
+      }
     }
     return ExceptionResponse.toResponseEntity(HttpStatus.BAD_REQUEST, error);
   }

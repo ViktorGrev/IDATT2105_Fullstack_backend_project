@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2105.trivium.security;
+package edu.ntnu.idatt2105.trivium.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
