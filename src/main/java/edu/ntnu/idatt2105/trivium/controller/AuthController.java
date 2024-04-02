@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller handling authentication-related requests.
+ * Controller handling authentication related requests.
  */
 @Validated
 @CrossOrigin
