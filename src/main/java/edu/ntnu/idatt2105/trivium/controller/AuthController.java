@@ -6,7 +6,7 @@ import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2105.trivium.model.user.User;
-import edu.ntnu.idatt2105.trivium.security.TokenUtils;
+import edu.ntnu.idatt2105.trivium.utils.TokenUtils;
 import edu.ntnu.idatt2105.trivium.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

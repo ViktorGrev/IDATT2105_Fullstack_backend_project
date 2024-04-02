@@ -2,11 +2,15 @@ package edu.ntnu.idatt2105.trivium.controller;
 
 import edu.ntnu.idatt2105.trivium.dto.quiz.CreateQuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.QuizDTO;
+import edu.ntnu.idatt2105.trivium.dto.quiz.answer.AnswerDTO;
+import edu.ntnu.idatt2105.trivium.dto.quiz.result.QuizResultDTO;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
-import edu.ntnu.idatt2105.trivium.model.user.User;
+import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
+import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
 import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
 import edu.ntnu.idatt2105.trivium.service.QuizService;
-import edu.ntnu.idatt2105.trivium.service.UserService;
+import edu.ntnu.idatt2105.trivium.utils.MapperUtils;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -15,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Validated
 @CrossOrigin
@@ -26,18 +32,34 @@ public class QuizController {
   @Autowired
   private QuizService quizService;
   @Autowired
-  private UserService userService;
-  @Autowired
   private ModelMapper modelMapper;
 
   @PostMapping
-  public ResponseEntity<?> create(@AuthenticationPrincipal AuthIdentity identity,
+  public ResponseEntity<QuizDTO> create(@AuthenticationPrincipal AuthIdentity identity,
                                   @Validated @RequestBody CreateQuizDTO createQuizDTO) {
     Quiz quiz = modelMapper.map(createQuizDTO, Quiz.class);
-    User creator = userService.findByUsername(identity.getUsername());
-    quiz.setCreator(creator);
-    quizService.createQuiz(quiz);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+    quizService.createQuiz(identity.getId(), quiz);
+    QuizDTO quizDTO = modelMapper.map(quiz, QuizDTO.class);
+    return ResponseEntity.status(HttpStatus.CREATED).body(quizDTO);
+  }
+
+  @PostMapping("/{id}/answers")
+  public ResponseEntity<QuizResultDTO> answer(
+      @AuthenticationPrincipal AuthIdentity identity,
+      @PathVariable long id,
+      @Validated @RequestBody List<@Valid AnswerDTO> answersDTO) {
+    List<Answer> answers = MapperUtils.mapList(answersDTO,
+        answerDTO -> modelMapper.map(answerDTO, Answer.class));
+    QuizResult result = quizService.answer(identity.getId(), id, answers);
+    QuizResultDTO resultDTO = modelMapper.map(result, QuizResultDTO.class);
+    return ResponseEntity.ok(resultDTO);
+  }
+
+  @GetMapping("/results/{id}")
+  public ResponseEntity<QuizResultDTO> getResult(@PathVariable long id) {
+    QuizResult result = quizService.getResult(id);
+    QuizResultDTO resultDTO = modelMapper.map(result, QuizResultDTO.class);
+    return ResponseEntity.ok(resultDTO);
   }
 
   @GetMapping(value = "/{id}")
