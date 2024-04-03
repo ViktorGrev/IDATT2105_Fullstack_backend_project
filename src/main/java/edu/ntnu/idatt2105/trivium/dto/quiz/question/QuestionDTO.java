@@ -1,10 +1,10 @@
 package edu.ntnu.idatt2105.trivium.dto.quiz.question;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.Question;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import edu.ntnu.idatt2105.trivium.validation.Enumerator;
+import edu.ntnu.idatt2105.trivium.validation.QuestionText;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,11 +26,9 @@ public abstract class QuestionDTO {
   @Nullable
   private long id;
 
-  @Size(min = Question.Config.TEXT_MIN_LENGTH, max = Question.Config.TEXT_MAX_LENGTH,
-      message = "Question text must be between {min} and {max} characters")
-  @NotNull(message = "Question text is required")
+  @QuestionText
   private String text;
 
-  @NotNull(message = "Question type is required")
-  private Question.Type type;
+  @Enumerator(value = Question.Type.class, nullable = false, message = "Invalid question type")
+  private String type;
 }

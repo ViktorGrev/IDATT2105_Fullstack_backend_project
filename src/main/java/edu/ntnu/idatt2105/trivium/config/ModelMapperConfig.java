@@ -30,21 +30,21 @@ public class ModelMapperConfig {
     modelMapper.createTypeMap(FillTheBlankQuestionDTO.class, Question.class)
         .setConverter(context -> {
           FillTheBlankQuestionDTO dto = context.getSource();
-          return FillTheBlankQuestion.builder().type(dto.getType()).text(dto.getText())
-              .solution(dto.getSolution()).build();
+          return FillTheBlankQuestion.builder().type(Question.Type.valueOf(dto.getType().toUpperCase()))
+              .text(dto.getText()).solution(dto.getSolution()).build();
         });
 
     modelMapper.createTypeMap(FillTheBlankQuestion.class, QuestionDTO.class)
         .setConverter(context -> {
           FillTheBlankQuestion dto = context.getSource();
-          return FillTheBlankQuestionDTO.builder().id(dto.getId()).type(dto.getType()).text(dto.getText())
+          return FillTheBlankQuestionDTO.builder().id(dto.getId()).type(dto.getType().name()).text(dto.getText())
               .solution(dto.getSolution()).build();
         });
 
     modelMapper.createTypeMap(MultipleChoiceQuestionDTO.class, Question.class)
         .setConverter(context -> {
           MultipleChoiceQuestionDTO dto = context.getSource();
-          return MultipleChoiceQuestion.builder().type(dto.getType()).text(dto.getText())
+          return MultipleChoiceQuestion.builder().type(Question.Type.valueOf(dto.getType().toUpperCase())).text(dto.getText())
               .options(dto.getOptions().stream().map(dto1 -> MultipleChoiceQuestion.Option.builder()
                   .optionText(dto1.getOptionText()).correct(dto1.isCorrect()).build()).toList()).build();
         });
@@ -52,7 +52,7 @@ public class ModelMapperConfig {
     modelMapper.createTypeMap(MultipleChoiceQuestion.class, QuestionDTO.class)
         .setConverter(context -> {
           MultipleChoiceQuestion dto = context.getSource();
-          return MultipleChoiceQuestionDTO.builder().id(dto.getId()).type(dto.getType()).text(dto.getText())
+          return MultipleChoiceQuestionDTO.builder().id(dto.getId()).type(dto.getType().name()).text(dto.getText())
               .options(dto.getOptions().stream().map(option -> MultipleChoiceQuestionDTO.OptionDTO
                   .builder().id(option.getId()).optionText(option.getOptionText()).correct(option.isCorrect()).build())
                   .toList()).build();
@@ -61,13 +61,13 @@ public class ModelMapperConfig {
     modelMapper.createTypeMap(TrueFalseQuestionDTO.class, Question.class)
         .setConverter(context -> {
           TrueFalseQuestionDTO dto = context.getSource();
-          return TrueFalseQuestion.builder().type(dto.getType()).text(dto.getText()).isTrue(dto.isTrue()).build();
+          return TrueFalseQuestion.builder().type(Question.Type.valueOf(dto.getType().toUpperCase())).text(dto.getText()).isTrue(dto.isTrue()).build();
         });
 
     modelMapper.createTypeMap(TrueFalseQuestion.class, QuestionDTO.class)
         .setConverter(context -> {
           TrueFalseQuestion dto = context.getSource();
-          return TrueFalseQuestionDTO.builder().id(dto.getId()).type(dto.getType()).text(dto.getText())
+          return TrueFalseQuestionDTO.builder().id(dto.getId()).type(dto.getType().name()).text(dto.getText())
               .isTrue(dto.isTrue()).build();
         });
 

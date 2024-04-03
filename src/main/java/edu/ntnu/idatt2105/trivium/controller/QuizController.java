@@ -38,7 +38,7 @@ public class QuizController {
 
   @PostMapping
   public ResponseEntity<QuizDTO> create(@AuthenticationPrincipal AuthIdentity identity,
-                                  @RequestBody CreateQuizDTO createQuizDTO) {
+                                  @Validated @RequestBody CreateQuizDTO createQuizDTO) {
     Quiz quiz = modelMapper.map(createQuizDTO, Quiz.class);
     quizService.createQuiz(identity.getId(), quiz);
     QuizDTO quizDTO = modelMapper.map(quiz, QuizDTO.class);

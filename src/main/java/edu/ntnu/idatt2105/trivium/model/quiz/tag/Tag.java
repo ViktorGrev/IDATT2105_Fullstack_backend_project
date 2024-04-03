@@ -21,15 +21,9 @@ public class Tag {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "name", length = Config.NAME_MAX_LENGTH, nullable = false)
+  @Column(name = "name", length = 12, nullable = false)
   private String name;
 
   @ManyToMany(mappedBy = "tags")
   private List<Quiz> quizzes;
-
-  public static class Config {
-
-    public static final int NAME_MIN_LENGTH = 3;
-    public static final int NAME_MAX_LENGTH = 16;
-  }
 }

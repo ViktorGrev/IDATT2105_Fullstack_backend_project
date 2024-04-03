@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2105.trivium.dto.auth;
 
-import edu.ntnu.idatt2105.trivium.validation.user.Password;
-import edu.ntnu.idatt2105.trivium.validation.user.Username;
+import edu.ntnu.idatt2105.trivium.validation.Password;
+import edu.ntnu.idatt2105.trivium.validation.Username;
 import lombok.Data;
 
 /**

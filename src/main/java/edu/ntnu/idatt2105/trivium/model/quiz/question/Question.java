@@ -19,7 +19,7 @@ public abstract class Question {
   @GeneratedValue(strategy = GenerationType.TABLE)
   private Long id;
 
-  @Column(name = "text", length = Config.TEXT_MAX_LENGTH, nullable = false)
+  @Column(name = "text", length = 64, nullable = false)
   private String text;
 
   private Type type;
@@ -29,11 +29,5 @@ public abstract class Question {
     FILL_IN_THE_BLANK,
     MULTIPLE_CHOICE,
     UNKNOWN
-  }
-
-  public static class Config {
-
-    public static final int TEXT_MIN_LENGTH = 4;
-    public static final int TEXT_MAX_LENGTH = 16;
   }
 }

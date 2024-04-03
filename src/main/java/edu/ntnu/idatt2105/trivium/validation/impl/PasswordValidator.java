@@ -1,6 +1,7 @@
-package edu.ntnu.idatt2105.trivium.validation.user;
+package edu.ntnu.idatt2105.trivium.validation.impl;
 
 import edu.ntnu.idatt2105.trivium.properties.UserProperties;
+import edu.ntnu.idatt2105.trivium.validation.Password;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -24,13 +24,10 @@ public class Quiz {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "timestamp", nullable = false)
-  private Timestamp timestamp;
-
-  @Column(name = "title", length = Config.TITLE_MAX_LENGTH, nullable = false)
+  @Column(name = "title", length = 32, nullable = false)
   private String title;
 
-  @Column(name = "description", length = Config.DESCRIPTION_MAX_LENGTH, nullable = false)
+  @Column(name = "description", length = 128, nullable = false)
   private String description;
 
   @Enumerated
@@ -41,13 +38,15 @@ public class Quiz {
   @JoinTable(
       name = "quiz_tag",
       joinColumns = @JoinColumn(name = "quiz_id"),
-      inverseJoinColumns = @JoinColumn(name = "tag_id")
-  )
+      inverseJoinColumns = @JoinColumn(name = "tag_id"))
   private List<Tag> tags;
 
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "quiz_id", nullable = false)
   private List<Question> questions;
+
+  @Column(name = "timestamp", nullable = false)
+  private Timestamp timestamp;
 
   @Column(name = "random", nullable = false)
   private boolean random;
@@ -57,19 +56,13 @@ public class Quiz {
   private User creator;
 
   public enum Category {
-    SCIENCE,
-    MATH,
-    HISTORY,
+    CHEMISTRY,
+    CALCULUS,
+    ENGINEERING,
+    ALGEBRA,
+    PHYSICS,
+    BIOLOGY,
+    LANGUAGE,
     OTHER
-  }
-
-  public static class Config {
-
-    public static final int TITLE_MIN_LENGTH = 4;
-    public static final int TITLE_MAX_LENGTH = 32;
-    public static final int DESCRIPTION_MAX_LENGTH = 128;
-    public static final int TAGS_MAX_SIZE = 16;
-    public static final int QUESTIONS_MIN_SIZE = 1;
-    public static final int QUESTIONS_MAX_SIZE = 50;
   }
 }

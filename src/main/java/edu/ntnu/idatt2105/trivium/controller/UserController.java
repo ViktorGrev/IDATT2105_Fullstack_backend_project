@@ -4,7 +4,7 @@ import edu.ntnu.idatt2105.trivium.dto.user.UserDTO;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
 import edu.ntnu.idatt2105.trivium.service.UserService;
-import edu.ntnu.idatt2105.trivium.validation.user.Username;
+import edu.ntnu.idatt2105.trivium.validation.Username;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
