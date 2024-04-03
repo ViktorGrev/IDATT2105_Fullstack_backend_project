@@ -17,4 +17,6 @@ public interface QuizService {
   QuizResult getResult(long resultId);
 
   Quiz getQuiz(long id);
+
+  List<Quiz> getQuizzes();
 }

@@ -68,4 +68,11 @@ public class QuizController {
     QuizDTO quizDTO = modelMapper.map(quiz, QuizDTO.class);
     return ResponseEntity.ok(quizDTO);
   }
+
+  @GetMapping(value = "/recent")
+  public ResponseEntity<List<QuizDTO>> findRecent() {
+    List<Quiz> quizzes = quizService.getQuizzes();
+    List<QuizDTO> quizDTO = MapperUtils.mapList(quizzes, quiz -> modelMapper.map(quiz, QuizDTO.class));
+    return ResponseEntity.ok(quizDTO);
+  }
 }
