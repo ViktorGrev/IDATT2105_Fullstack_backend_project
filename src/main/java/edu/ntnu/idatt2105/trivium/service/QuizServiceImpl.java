@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.trivium.service;
 
+import edu.ntnu.idatt2105.trivium.dto.quiz.QuizDTO;
 import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.result.ResultNotFoundException;
@@ -36,6 +37,7 @@ public class QuizServiceImpl implements QuizService {
   public Quiz createQuiz(long userId, Quiz quiz) {
     User creator = userService.findById(userId);
     quiz.setCreator(creator);
+    quiz.setTimestamp(Timestamp.from(Instant.now()));
     return quizRepository.save(quiz);
   }
 
@@ -125,5 +127,10 @@ public class QuizServiceImpl implements QuizService {
     } else {
       throw new QuizNotFoundException();
     }
+  }
+
+  @Override
+  public List<Quiz> getQuizzes() {
+    return quizRepository.findAll();
   }
 }
