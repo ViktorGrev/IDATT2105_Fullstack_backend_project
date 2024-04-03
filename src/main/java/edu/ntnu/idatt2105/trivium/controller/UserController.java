@@ -42,4 +42,11 @@ public class UserController {
     UserDTO userDTO = modelMapper.map(user, UserDTO.class);
     return ResponseEntity.ok(userDTO);
   }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<UserDTO> getUser(@PathVariable long id) {
+    User user = userService.findById(id);
+    UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+    return ResponseEntity.ok(userDTO);
+  }
 }
