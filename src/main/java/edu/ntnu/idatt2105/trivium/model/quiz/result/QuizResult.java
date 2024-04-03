@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.trivium.model.quiz.result;
 
+import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import jakarta.persistence.*;
@@ -36,4 +37,8 @@ public class QuizResult {
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "result_id")
   private List<Answer> answers;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "quiz_id", nullable = false)
+  private Quiz quiz;
 }

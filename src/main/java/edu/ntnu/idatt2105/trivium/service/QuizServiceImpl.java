@@ -49,6 +49,7 @@ public class QuizServiceImpl implements QuizService {
     Quiz quiz = getQuiz(quizId);
     int score = calculateScore(quiz, answers);
     QuizResult result = QuizResult.builder().score(score).user(user)
+        .quiz(quiz)
         .timestamp(Timestamp.from(Instant.now())).answers(answers).build();
     return resultRepository.save(result);
   }
