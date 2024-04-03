@@ -3,9 +3,11 @@ package edu.ntnu.idatt2105.trivium.controller;
 import edu.ntnu.idatt2105.trivium.dto.quiz.CreateQuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.QuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.answer.AnswerDTO;
+import edu.ntnu.idatt2105.trivium.dto.quiz.leaderboard.LeaderboardEntryDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.result.QuizResultDTO;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
+import edu.ntnu.idatt2105.trivium.model.quiz.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
 import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
 import edu.ntnu.idatt2105.trivium.service.QuizService;
@@ -36,7 +38,7 @@ public class QuizController {
 
   @PostMapping
   public ResponseEntity<QuizDTO> create(@AuthenticationPrincipal AuthIdentity identity,
-                                  @Validated @RequestBody CreateQuizDTO createQuizDTO) {
+                                  @RequestBody CreateQuizDTO createQuizDTO) {
     Quiz quiz = modelMapper.map(createQuizDTO, Quiz.class);
     quizService.createQuiz(identity.getId(), quiz);
     QuizDTO quizDTO = modelMapper.map(quiz, QuizDTO.class);
@@ -73,6 +75,13 @@ public class QuizController {
   public ResponseEntity<List<QuizDTO>> findRecent() {
     List<Quiz> quizzes = quizService.getQuizzes();
     List<QuizDTO> quizDTO = MapperUtils.mapList(quizzes, quiz -> modelMapper.map(quiz, QuizDTO.class));
+    return ResponseEntity.ok(quizDTO);
+  }
+
+  @GetMapping(value = "/{id}/leaderboard")
+  public ResponseEntity<List<LeaderboardEntryDTO>> getLeaderboard(@PathVariable long id) {
+    List<LeaderboardEntry> quizzes = quizService.getLeaderboard(id);
+    List<LeaderboardEntryDTO> quizDTO = MapperUtils.mapList(quizzes, quiz -> modelMapper.map(quiz, LeaderboardEntryDTO.class));
     return ResponseEntity.ok(quizDTO);
   }
 }
