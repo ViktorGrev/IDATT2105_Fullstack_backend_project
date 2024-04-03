@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.trivium.dto.quiz.result;
 
+import edu.ntnu.idatt2105.trivium.dto.quiz.QuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.answer.AnswerDTO;
 import edu.ntnu.idatt2105.trivium.dto.user.UserDTO;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class QuizResultDTO {
   private int score;
   private Timestamp timestamp;
   private List<AnswerDTO> answers;
+  private QuizDTO quiz;
 }
