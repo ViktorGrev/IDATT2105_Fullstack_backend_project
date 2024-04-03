@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2105.trivium.controller;
 
-import edu.ntnu.idatt2105.trivium.dto.security.AuthResponse;
-import edu.ntnu.idatt2105.trivium.dto.security.CredentialsRequest;
+import edu.ntnu.idatt2105.trivium.dto.auth.AuthResponse;
+import edu.ntnu.idatt2105.trivium.dto.auth.CredentialsRequest;
 import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;

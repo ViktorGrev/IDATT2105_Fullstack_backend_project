@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2105.trivium.dto.security;
+package edu.ntnu.idatt2105.trivium.dto.auth;
 
 import edu.ntnu.idatt2105.trivium.validation.user.Password;
 import edu.ntnu.idatt2105.trivium.validation.user.Username;

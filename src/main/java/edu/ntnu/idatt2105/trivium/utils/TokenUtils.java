@@ -3,14 +3,18 @@ package edu.ntnu.idatt2105.trivium.utils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import edu.ntnu.idatt2105.trivium.model.user.User;
+import edu.ntnu.idatt2105.trivium.properties.TokenProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
 
+@Component
 public final class TokenUtils {
 
-  public static final String SECRET = "topsecretkey";
-  private static final Duration TOKEN_VALIDITY = Duration.ofMinutes(5);
+  public static String SECRET;
+  private static Duration TOKEN_DURATION;
 
   /**
    * Generates a JWT (JSON Web Token) for the given user.
@@ -26,7 +30,13 @@ public final class TokenUtils {
         .withClaim("user_id", user.getId())
         .withIssuer("trivium")
         .withIssuedAt(now)
-        .withExpiresAt(now.plusMillis(TOKEN_VALIDITY.toMillis()))
+        .withExpiresAt(now.plusMillis(TOKEN_DURATION.toMillis()))
         .sign(hmac512);
+  }
+
+  @Autowired
+  public void setDuration(TokenProperties properties){
+    SECRET = properties.SECRET;
+    TOKEN_DURATION = Duration.ofMinutes(properties.DURATION);
   }
 }
