@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Builder
@@ -22,6 +23,9 @@ public class Quiz {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Column(name = "timestamp", nullable = false)
+  private Timestamp timestamp;
 
   @Column(name = "title", length = Config.TITLE_MAX_LENGTH, nullable = false)
   private String title;
