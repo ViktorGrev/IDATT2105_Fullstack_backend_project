@@ -56,6 +56,13 @@ public class UserController {
     return ResponseEntity.ok(userDTO);
   }
 
+  @GetMapping("/self")
+  public ResponseEntity<UserDTO> getSelf(@AuthenticationPrincipal AuthIdentity identity) {
+    User user = userService.findById(identity.getId());
+    UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+    return ResponseEntity.ok(userDTO);
+  }
+
   @PostMapping(value = "/search")
   public ResponseEntity<List<UserDTO>> search(@RequestParam(required = false) String username, Pageable pageable) {
     Specification<User> spec = Specification.where(null);
