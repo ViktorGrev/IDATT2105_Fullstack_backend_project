@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import edu.ntnu.idatt2105.trivium.model.user.Role;
 import edu.ntnu.idatt2105.trivium.utils.TokenUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,17 +30,14 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
   private static final Logger LOGGER = LogManager.getLogger(JWTAuthorizationFilter.class);
 
-  public static final String USER = "USER";
-  public static final String ROLE_USER = "ROLE_" + USER;
-
   /**
    * Filters incoming requests and processes JWT authorization.
    *
-   * @param request     The HTTP servlet request.
-   * @param response    The HTTP servlet response.
+   * @param request The HTTP servlet request.
+   * @param response The HTTP servlet response.
    * @param filterChain The filter chain for the request.
    * @throws ServletException If an error occurs during servlet processing.
-   * @throws IOException      If an I/O error occurs during request processing.
+   * @throws IOException If an I/O error occurs during request processing.
    */
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -56,11 +54,13 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
-    long userId = decodedJWT.getClaim("user_id").asLong();
-    String username = decodedJWT.getSubject();
+    long userId = Long.parseLong(decodedJWT.getSubject());
+    String userRole = decodedJWT.getClaim("user_role").asString();
+    String role = userRole.equals(Role.ADMIN.name()) ? "ROLE_ADMIN" : "ROLE_USER";
 
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-        new AuthIdentity(userId, username), null, Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER)));
+        new AuthIdentity(userId, role), null,
+        Collections.singletonList(new SimpleGrantedAuthority(role)));
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     filterChain.doFilter(request, response);

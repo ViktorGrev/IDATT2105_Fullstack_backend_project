@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * Utility class for working with JWT (JSON Web Token) generation and validation.
+ */
 @Component
 public final class TokenUtils {
 
@@ -26,16 +29,21 @@ public final class TokenUtils {
     final Instant now = Instant.now();
     final Algorithm hmac512 = Algorithm.HMAC512(SECRET);;
     return JWT.create()
-        .withSubject(user.getUsername())
-        .withClaim("user_id", user.getId())
+        .withSubject(String.valueOf(user.getId()))
+        .withClaim("user_role", user.getRole().name())
         .withIssuer("trivium")
         .withIssuedAt(now)
         .withExpiresAt(now.plusMillis(TOKEN_DURATION.toMillis()))
         .sign(hmac512);
   }
 
+  /**
+   * Sets the properties for the JWT generation.
+   *
+   * @param properties The properties containing the secret and token duration.
+   */
   @Autowired
-  public void setDuration(TokenProperties properties){
+  public void setProperties(TokenProperties properties) {
     SECRET = properties.SECRET;
     TOKEN_DURATION = Duration.ofMinutes(properties.DURATION);
   }
