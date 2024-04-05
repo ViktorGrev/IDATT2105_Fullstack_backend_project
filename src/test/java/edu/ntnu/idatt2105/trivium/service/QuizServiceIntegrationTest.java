@@ -224,10 +224,10 @@ public class QuizServiceIntegrationTest {
     QuizResult result2 = new QuizResult();
     result2.setScore(20);
     List<QuizResult> mockResults = List.of(result1, result2);
-    when(resultRepository.lb()).thenReturn(mockResults);
+    when(resultRepository.findByQuizIdOrderByScoreDesc(quizId)).thenReturn(mockResults);
 
     // Act
-    List<LeaderboardEntry> leaderboard = quizService.getLeaderboard(quizId);
+    List<QuizResult> leaderboard = quizService.getLeaderboard(quizId);
 
     // Assert
     assertNotNull(leaderboard);
@@ -240,10 +240,10 @@ public class QuizServiceIntegrationTest {
   public void testGetLeaderboard_NoResults_ReturnsEmptyList() {
     // Arrange
     long quizId = 1L;
-    when(resultRepository.lb()).thenReturn(new ArrayList<>());
+    when(resultRepository.findByQuizIdOrderByScoreDesc(quizId)).thenReturn(new ArrayList<>());
 
     // Act
-    List<LeaderboardEntry> leaderboard = quizService.getLeaderboard(quizId);
+    List<QuizResult> leaderboard = quizService.getLeaderboard(quizId);
 
     // Assert
     assertNotNull(leaderboard);
