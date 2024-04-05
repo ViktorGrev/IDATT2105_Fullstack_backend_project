@@ -1,17 +1,21 @@
 package edu.ntnu.idatt2105.trivium.properties;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+/**
+ * Configuration properties for JWT (JSON Web Token) generation.
+ */
 @Component
-@PropertySource("classpath:validation.properties")
 public final class TokenProperties {
 
-  @Value("${token.secret}")
-  public String SECRET;
+  /**
+   * The secret key used for JWT generation.
+   */
+  public static final String SECRET = "topsecretkey";
 
-  @Value("${token.duration}")
-  public int DURATION;
+  /**
+   * The duration of the JWT token validity in minutes.
+   */
+  public static final int DURATION = 30;
 
 }

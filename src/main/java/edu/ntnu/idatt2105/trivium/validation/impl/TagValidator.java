@@ -4,7 +4,6 @@ import edu.ntnu.idatt2105.trivium.properties.QuizProperties;
 import edu.ntnu.idatt2105.trivium.validation.Tag;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.regex.Pattern;
 
@@ -15,20 +14,17 @@ import java.util.regex.Pattern;
  */
 public final class TagValidator implements ConstraintValidator<Tag, String> {
 
-  @Autowired
-  private QuizProperties properties;
-
   private Pattern pattern;
 
   /**
    * Initializes the validator.
    *
-   * @param username The Username annotation.
+   * @param tag The Tag annotation.
    */
   @Override
   public void initialize(Tag tag) {
     if (pattern == null) {
-      pattern = Pattern.compile(properties.TAG_REGEX);
+      pattern = Pattern.compile(QuizProperties.TAG_REGEX);
     }
   }
 
@@ -43,11 +39,11 @@ public final class TagValidator implements ConstraintValidator<Tag, String> {
   public boolean isValid(String tag, ConstraintValidatorContext context) {
     String message = null;
     if (tag == null) {
-      message = properties.TAG_EMPTY;
-    } else if (tag.length() < properties.TAG_LEN_MIN || tag.length() > properties.TAG_LEN_MAX) {
-      message = properties.TAG_LEN_MSG;
+      message = QuizProperties.TAG_EMPTY;
+    } else if (tag.length() < QuizProperties.TAG_LEN_MIN || tag.length() > QuizProperties.TAG_LEN_MAX) {
+      message = QuizProperties.TAG_LEN_MSG;
     } else if (!pattern.matcher(tag).matches()) {
-      message = properties.TAG_REGEX_MSG;
+      message = QuizProperties.TAG_REGEX_MSG;
     }
 
     if (message != null) {

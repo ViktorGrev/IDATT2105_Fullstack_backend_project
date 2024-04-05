@@ -5,7 +5,6 @@ import edu.ntnu.idatt2105.trivium.properties.QuizProperties;
 import edu.ntnu.idatt2105.trivium.validation.QuestionList;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -16,13 +15,10 @@ import java.util.List;
  */
 public final class QuestionListValidator implements ConstraintValidator<QuestionList, List<QuestionDTO>> {
 
-  @Autowired
-  private QuizProperties properties;
-
   /**
    * Initializes the validator.
    *
-   * @param username The Username annotation.
+   * @param list The QuestionList annotation.
    */
   @Override
   public void initialize(QuestionList list) {
@@ -40,9 +36,9 @@ public final class QuestionListValidator implements ConstraintValidator<Question
   public boolean isValid(List<QuestionDTO> list, ConstraintValidatorContext context) {
     String message = null;
     if (list == null) {
-      message = properties.QUESTION_LIST_EMPTY;
-    } else if (list.size() < properties.QUESTION_LIST_LEN_MIN || list.size() > properties.QUESTION_LIST_LEN_MAX) {
-      message = properties.QUESTION_LIST_LEN_MSG;
+      message = QuizProperties.QUESTION_LIST_EMPTY;
+    } else if (list.size() < QuizProperties.QUESTION_LIST_LEN_MIN || list.size() > QuizProperties.QUESTION_LIST_LEN_MAX) {
+      message = QuizProperties.QUESTION_LIST_LEN_MSG;
     }
 
     if (message != null) {

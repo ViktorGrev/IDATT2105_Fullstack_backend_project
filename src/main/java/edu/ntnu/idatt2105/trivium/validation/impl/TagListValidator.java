@@ -4,7 +4,6 @@ import edu.ntnu.idatt2105.trivium.properties.QuizProperties;
 import edu.ntnu.idatt2105.trivium.validation.TagList;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -15,13 +14,10 @@ import java.util.List;
  */
 public final class TagListValidator implements ConstraintValidator<TagList, List<String>> {
 
-  @Autowired
-  private QuizProperties properties;
-
   /**
    * Initializes the validator.
    *
-   * @param username The Username annotation.
+   * @param list The TagList annotation.
    */
   @Override
   public void initialize(TagList list) {
@@ -38,8 +34,8 @@ public final class TagListValidator implements ConstraintValidator<TagList, List
   @Override
   public boolean isValid(List<String> list, ConstraintValidatorContext context) {
     String message = null;
-    if (list.size() > properties.TAG_LIST_LEN_MAX) {
-      message = properties.TAG_LIST_LEN_MSG;
+    if (list.size() > QuizProperties.TAG_LIST_LEN_MAX) {
+      message = QuizProperties.TAG_LIST_LEN_MSG;
     }
 
     if (message != null) {

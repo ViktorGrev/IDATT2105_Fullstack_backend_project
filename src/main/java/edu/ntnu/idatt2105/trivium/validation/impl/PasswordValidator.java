@@ -4,7 +4,6 @@ import edu.ntnu.idatt2105.trivium.properties.UserProperties;
 import edu.ntnu.idatt2105.trivium.validation.Password;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.regex.Pattern;
 
@@ -14,9 +13,6 @@ import java.util.regex.Pattern;
  * criteria defined in the application properties.
  */
 public final class PasswordValidator implements ConstraintValidator<Password, String> {
-
-  @Autowired
-  private UserProperties properties;
 
   private Pattern pattern;
 
@@ -28,7 +24,7 @@ public final class PasswordValidator implements ConstraintValidator<Password, St
   @Override
   public void initialize(Password password) {
     if (pattern == null) {
-      pattern = Pattern.compile(properties.PASS_REGEX);
+      pattern = Pattern.compile(UserProperties.PASS_REGEX);
     }
   }
 
@@ -43,11 +39,11 @@ public final class PasswordValidator implements ConstraintValidator<Password, St
   public boolean isValid(String password, ConstraintValidatorContext context) {
     String message = null;
     if (password == null) {
-      message = properties.PASS_EMPTY;
-    } else if (password.length() < properties.PASS_LEN_MIN || password.length() > properties.PASS_LEN_MAX) {
-      message = properties.PASS_LEN_MSG;
+      message = UserProperties.PASS_EMPTY;
+    } else if (password.length() < UserProperties.PASS_LEN_MIN || password.length() > UserProperties.PASS_LEN_MAX) {
+      message = UserProperties.PASS_LEN_MSG;
     } else if (!pattern.matcher(password).matches()) {
-      message = properties.PASS_REGEX_MSG;
+      message = UserProperties.PASS_REGEX_MSG;
     }
 
     if (message != null) {

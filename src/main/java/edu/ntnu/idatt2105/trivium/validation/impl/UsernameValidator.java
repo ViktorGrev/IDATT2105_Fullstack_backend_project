@@ -4,7 +4,6 @@ import edu.ntnu.idatt2105.trivium.properties.UserProperties;
 import edu.ntnu.idatt2105.trivium.validation.Username;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.regex.Pattern;
 
@@ -14,9 +13,6 @@ import java.util.regex.Pattern;
  * criteria defined in the application properties.
  */
 public final class UsernameValidator implements ConstraintValidator<Username, String> {
-
-  @Autowired
-  private UserProperties properties;
 
   private Pattern pattern;
 
@@ -28,7 +24,7 @@ public final class UsernameValidator implements ConstraintValidator<Username, St
   @Override
   public void initialize(Username username) {
     if (pattern == null) {
-      pattern = Pattern.compile(properties.NAME_REGEX);
+      pattern = Pattern.compile(UserProperties.NAME_REGEX);
     }
   }
 
@@ -43,11 +39,11 @@ public final class UsernameValidator implements ConstraintValidator<Username, St
   public boolean isValid(String username, ConstraintValidatorContext context) {
     String message = null;
     if (username == null) {
-      message = properties.NAME_EMPTY;
-    } else if (username.length() < properties.NAME_LEN_MIN || username.length() > properties.NAME_LEN_MAX) {
-      message = properties.NAME_LEN_MSG;
+      message = UserProperties.NAME_EMPTY;
+    } else if (username.length() < UserProperties.NAME_LEN_MIN || username.length() > UserProperties.NAME_LEN_MAX) {
+      message = UserProperties.NAME_LEN_MSG;
     } else if (!pattern.matcher(username).matches()) {
-      message = properties.NAME_REGEX_MSG;
+      message = UserProperties.NAME_REGEX_MSG;
     }
 
     if (message != null) {

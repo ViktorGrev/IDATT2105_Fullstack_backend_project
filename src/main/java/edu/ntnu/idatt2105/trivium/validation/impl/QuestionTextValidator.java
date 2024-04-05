@@ -4,7 +4,6 @@ import edu.ntnu.idatt2105.trivium.properties.QuizProperties;
 import edu.ntnu.idatt2105.trivium.validation.QuestionText;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Validator for the QuestionText constraint.
@@ -13,13 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public final class QuestionTextValidator implements ConstraintValidator<QuestionText, String> {
 
-  @Autowired
-  private QuizProperties properties;
-
   /**
    * Initializes the validator.
    *
-   * @param username The Username annotation.
+   * @param text The QuestionText annotation.
    */
   @Override
   public void initialize(QuestionText text) {
@@ -37,9 +33,9 @@ public final class QuestionTextValidator implements ConstraintValidator<Question
   public boolean isValid(String text, ConstraintValidatorContext context) {
     String message = null;
     if (text == null) {
-      message = properties.QUESTION_TEXT_EMPTY;
-    } else if (text.length() < properties.QUESTION_TEXT_LEN_MIN || text.length() > properties.QUESTION_TEXT_LEN_MAX) {
-      message = properties.QUESTION_TEXT_LEN_MSG;
+      message = QuizProperties.QUESTION_TEXT_EMPTY;
+    } else if (text.length() < QuizProperties.QUESTION_TEXT_LEN_MIN || text.length() > QuizProperties.QUESTION_TEXT_LEN_MAX) {
+      message = QuizProperties.QUESTION_TEXT_LEN_MSG;
     }
 
     if (message != null) {
