@@ -1,6 +1,9 @@
 package edu.ntnu.idatt2105.trivium.service;
 
 import edu.ntnu.idatt2105.trivium.model.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 /**
@@ -45,4 +48,6 @@ public interface UserService {
    * @return The updated user.
    */
   User updateUsername(long userId, String username);
+
+  Page<User> search(Specification<User> spec, Pageable pageable);
 }

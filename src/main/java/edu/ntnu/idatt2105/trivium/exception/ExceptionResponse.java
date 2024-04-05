@@ -22,7 +22,7 @@ public class ExceptionResponse {
    * @param message The message describing the exception.
    * @return A ResponseEntity containing the exception response.
    */
-  protected static ResponseEntity<Object> toResponseEntity(HttpStatus status, String message) {
+  protected static ResponseEntity<ExceptionResponse> toResponseEntity(HttpStatus status, String message) {
     ExceptionResponse response = new ExceptionResponse(status.value(), message);
     return ResponseEntity.status(status).body(response);
   }

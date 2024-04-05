@@ -2,16 +2,22 @@ package edu.ntnu.idatt2105.trivium.controller;
 
 import edu.ntnu.idatt2105.trivium.dto.user.UserDTO;
 import edu.ntnu.idatt2105.trivium.model.user.User;
+import edu.ntnu.idatt2105.trivium.search.Specifications;
 import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
 import edu.ntnu.idatt2105.trivium.service.UserService;
 import edu.ntnu.idatt2105.trivium.validation.Username;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Controller handling user related requests.
@@ -19,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @CrossOrigin
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @EnableAutoConfiguration
 public class UserController {
 
@@ -48,5 +54,16 @@ public class UserController {
     User user = userService.findById(id);
     UserDTO userDTO = modelMapper.map(user, UserDTO.class);
     return ResponseEntity.ok(userDTO);
+  }
+
+  @PostMapping(value = "/search")
+  public ResponseEntity<List<UserDTO>> search(@RequestParam(required = false) String username, Pageable pageable) {
+    Specification<User> spec = Specification.where(null);
+    if (username != null) {
+      spec = spec.or(Specifications.UserSpec.withUsername(username));
+    }
+    Page<User> users = userService.search(spec, pageable);
+    List<UserDTO> userDTOList = users.map(quiz -> modelMapper.map(quiz, UserDTO.class)).toList();
+    return ResponseEntity.ok(userDTOList);
   }
 }

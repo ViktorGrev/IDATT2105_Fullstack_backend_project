@@ -10,8 +10,12 @@ import java.util.List;
 @Repository
 public interface QuizResultRepository extends JpaRepository<QuizResult, Long> {
 
+  List<QuizResult> findAllByUserIdOrderByTimestampDesc(long userId);
+
   @Query(value = "SELECT r FROM QuizResult r ORDER BY r.score DESC")
   List<QuizResult> lb();
+
+  List<QuizResult> findByQuizIdOrderByScoreDesc(long id);
 
   /*@Query(value = "with cte_rank as\n" +
       "(\n" +

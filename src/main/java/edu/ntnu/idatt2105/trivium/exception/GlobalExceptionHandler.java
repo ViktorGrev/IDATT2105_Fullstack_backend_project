@@ -49,7 +49,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     if (fieldError != null) {
       error = fieldError.getDefaultMessage();
     }
-    return ExceptionResponse.toResponseEntity(HttpStatus.BAD_REQUEST, error);
+    ExceptionResponse response = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), error);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
 
   /**
@@ -59,12 +60,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @return A ResponseEntity containing the error response.
    */
   @ExceptionHandler({InvalidAnswerFormatException.class, ConstraintViolationException.class})
-  public ResponseEntity<Object> handleBadRequest(Exception e) {
+  public ResponseEntity<ExceptionResponse> handleBadRequest(Exception e) {
     String error = e.getMessage();
     if (e instanceof ConstraintViolationException constraintViolationException) {
-      System.out.println("A");
       for (ConstraintViolation<?> violation : constraintViolationException.getConstraintViolations()) {
-        System.out.println("V " + violation.getMessage());
         error = violation.getMessage();
         break;
       }
@@ -80,7 +79,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    */
   @ExceptionHandler({InvalidCredentialsException.class, AccessDeniedException.class,
       AuthenticationException.class, CredentialsExpiredException.class})
-  public ResponseEntity<Object> handleUnauthorized(Exception e) {
+  public ResponseEntity<ExceptionResponse> handleUnauthorized(Exception e) {
     return ExceptionResponse.toResponseEntity(HttpStatus.UNAUTHORIZED, e.getMessage());
   }
 
@@ -91,7 +90,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @return A ResponseEntity containing the error response.
    */
   @ExceptionHandler({UserAlreadyExistsException.class, UsernameTakenException.class})
-  public ResponseEntity<Object> handleConflict(Exception e) {
+  public ResponseEntity<ExceptionResponse> handleConflict(Exception e) {
     return ExceptionResponse.toResponseEntity(HttpStatus.CONFLICT, e.getMessage());
   }
 
@@ -102,7 +101,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @return A ResponseEntity containing the error response.
    */
   @ExceptionHandler({UserNotFoundException.class, QuizNotFoundException.class})
-  public ResponseEntity<Object> handleNotFound(Exception e) {
+  public ResponseEntity<ExceptionResponse> handleNotFound(Exception e) {
     return ExceptionResponse.toResponseEntity(HttpStatus.NOT_FOUND, e.getMessage());
   }
 
@@ -113,7 +112,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @return A ResponseEntity containing the error response.
    */
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<Object> handleRemainingExceptions(Exception e) {
+  public ResponseEntity<ExceptionResponse> handleRemainingExceptions(Exception e) {
     return ExceptionResponse.toResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
   }
 

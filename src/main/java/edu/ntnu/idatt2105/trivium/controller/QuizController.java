@@ -9,6 +9,7 @@ import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
 import edu.ntnu.idatt2105.trivium.model.quiz.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
+import edu.ntnu.idatt2105.trivium.search.Specifications;
 import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
 import edu.ntnu.idatt2105.trivium.service.QuizService;
 import edu.ntnu.idatt2105.trivium.utils.MapperUtils;
@@ -16,6 +17,9 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -64,24 +68,52 @@ public class QuizController {
     return ResponseEntity.ok(resultDTO);
   }
 
-  @GetMapping(value = "/{id}")
+  @GetMapping("/results/users/{userId}")
+  public ResponseEntity<List<QuizResultDTO>> getUserResults(@PathVariable long userId) {
+    List<QuizResult> results = quizService.getUserResults(userId);
+    List<QuizResultDTO> resultDTO = results.stream().map(result -> modelMapper.map(result, QuizResultDTO.class)).toList();
+    return ResponseEntity.ok(resultDTO);
+  }
+
+  @GetMapping("/{id}")
   public ResponseEntity<QuizDTO> find(@PathVariable long id) {
     Quiz quiz = quizService.getQuiz(id);
     QuizDTO quizDTO = modelMapper.map(quiz, QuizDTO.class);
     return ResponseEntity.ok(quizDTO);
   }
 
-  @GetMapping(value = "/recent")
+  @GetMapping("/recent")
   public ResponseEntity<List<QuizDTO>> findRecent() {
     List<Quiz> quizzes = quizService.getQuizzes();
     List<QuizDTO> quizDTO = MapperUtils.mapList(quizzes, quiz -> modelMapper.map(quiz, QuizDTO.class));
     return ResponseEntity.ok(quizDTO);
   }
 
-  @GetMapping(value = "/{id}/leaderboard")
-  public ResponseEntity<List<LeaderboardEntryDTO>> getLeaderboard(@PathVariable long id) {
-    List<LeaderboardEntry> quizzes = quizService.getLeaderboard(id);
-    List<LeaderboardEntryDTO> quizDTO = MapperUtils.mapList(quizzes, quiz -> modelMapper.map(quiz, LeaderboardEntryDTO.class));
+  @PostMapping("/search")
+  public ResponseEntity<List<QuizDTO>> search(
+      @RequestParam(required = false) String title,
+      @RequestParam(required = false) String description,
+      @RequestParam(required = false) Quiz.Category category,
+      Pageable pageable) {
+    Specification<Quiz> spec = Specification.where(null);
+    if (title != null) {
+      spec = spec.or(Specifications.QuizSpec.withTitle(title));
+    }
+    if (description != null) {
+      spec = spec.or(Specifications.QuizSpec.withDescription(description));
+    }
+    if (category != null) {
+      spec = spec.or(Specifications.QuizSpec.withCategory(category));
+    }
+    Page<Quiz> quizzes = quizService.search(spec, pageable);
+    List<QuizDTO> quizDTO = quizzes.map(quiz -> modelMapper.map(quiz, QuizDTO.class)).toList();
+    return ResponseEntity.ok(quizDTO);
+  }
+
+  @GetMapping("/{id}/leaderboard")
+  public ResponseEntity<List<QuizResultDTO>> getLeaderboard(@PathVariable long id) {
+    List<QuizResult> quizzes = quizService.getLeaderboard(id);
+    List<QuizResultDTO> quizDTO = MapperUtils.mapList(quizzes, quiz -> modelMapper.map(quiz, QuizResultDTO.class));
     return ResponseEntity.ok(quizDTO);
   }
 }

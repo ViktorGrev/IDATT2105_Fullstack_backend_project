@@ -4,10 +4,14 @@ import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.user.UsernameTakenException;
+import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +23,14 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+  private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
+
   @Autowired
-  private PasswordEncoder passwordEncoder;
-  @Autowired
-  private UserRepository userRepository;
+  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
 
   /**
    * {@inheritDoc}
@@ -95,5 +103,10 @@ public class UserServiceImpl implements UserService {
     } else {
       throw new UserNotFoundException();
     }
+  }
+
+  @Override
+  public Page<User> search(Specification<User> spec, Pageable pageable) {
+    return userRepository.findAll(spec, pageable);
   }
 }

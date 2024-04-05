@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2105.trivium.service;
 
-import edu.ntnu.idatt2105.trivium.dto.quiz.QuizDTO;
 import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.result.ResultNotFoundException;
@@ -16,10 +15,12 @@ import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.repository.QuizRepository;
 import edu.ntnu.idatt2105.trivium.repository.QuizResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class QuizServiceImpl implements QuizService {
     }
   }
 
-  private int calculateScore(Quiz quiz, List<Answer> answers) {
+  public int calculateScore(Quiz quiz, List<Answer> answers) {
     int score = 0;
     for (Answer answer : answers) {
       Question question = getQuestion(quiz, answer.getQuestion());
@@ -133,16 +134,22 @@ public class QuizServiceImpl implements QuizService {
   }
 
   @Override
+  public Page<Quiz> search(Specification<Quiz> spec, Pageable pageable) {
+    return quizRepository.findAll(spec, pageable);
+  }
+
+  @Override
   public List<Quiz> getQuizzes() {
     return quizRepository.findAll();
   }
 
   @Override
-  public List<LeaderboardEntry> getLeaderboard(long id) {
-    List<LeaderboardEntry> entries = new ArrayList<>();
-    for (QuizResult result : resultRepository.lb()) {
-      entries.add(new LeaderboardEntry(result.getUser(), result.getScore()));
-    }
-    return entries;
+  public List<QuizResult> getLeaderboard(long id) {
+    return resultRepository.findByQuizIdOrderByScoreDesc(id);
+  }
+
+  @Override
+  public List<QuizResult> getUserResults(long userId) {
+    return resultRepository.findAllByUserIdOrderByTimestampDesc(userId);
   }
 }
