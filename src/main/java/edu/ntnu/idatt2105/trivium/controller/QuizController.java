@@ -7,6 +7,7 @@ import edu.ntnu.idatt2105.trivium.dto.quiz.leaderboard.LeaderboardEntryDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.result.QuizResultDTO;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
+import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
 import edu.ntnu.idatt2105.trivium.search.Specifications;
@@ -82,9 +83,9 @@ public class QuizController {
     return ResponseEntity.ok(quizDTO);
   }
 
-  @GetMapping("/recent")
-  public ResponseEntity<List<QuizDTO>> findRecent() {
-    List<Quiz> quizzes = quizService.getQuizzes();
+  @GetMapping("/featured")
+  public ResponseEntity<List<QuizDTO>> getFeatured() {
+    List<FeaturedQuiz> quizzes = quizService.getFeatured();
     List<QuizDTO> quizDTO = MapperUtils.mapList(quizzes, quiz -> modelMapper.map(quiz, QuizDTO.class));
     return ResponseEntity.ok(quizDTO);
   }
@@ -93,8 +94,7 @@ public class QuizController {
   public ResponseEntity<List<QuizDTO>> search(
       @RequestParam(required = false) String title,
       @RequestParam(required = false) String description,
-      @RequestParam(required = false) Quiz.Category category,
-      Pageable pageable) {
+      @RequestParam(required = false) Quiz.Category category) {
     Specification<Quiz> spec = Specification.where(null);
     if (title != null) {
       spec = spec.or(Specifications.QuizSpec.withTitle(title));
@@ -105,7 +105,7 @@ public class QuizController {
     if (category != null) {
       spec = spec.or(Specifications.QuizSpec.withCategory(category));
     }
-    Page<Quiz> quizzes = quizService.search(spec, pageable);
+    Page<Quiz> quizzes = quizService.search(spec, Pageable.unpaged());
     List<QuizDTO> quizDTO = quizzes.map(quiz -> modelMapper.map(quiz, QuizDTO.class)).toList();
     return ResponseEntity.ok(quizDTO);
   }

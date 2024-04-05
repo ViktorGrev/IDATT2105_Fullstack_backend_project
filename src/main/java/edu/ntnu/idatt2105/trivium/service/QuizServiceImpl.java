@@ -5,7 +5,7 @@ import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatExcep
 import edu.ntnu.idatt2105.trivium.exception.quiz.result.ResultNotFoundException;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
-import edu.ntnu.idatt2105.trivium.model.quiz.leaderboard.LeaderboardEntry;
+import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.FillTheBlankQuestion;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.MultipleChoiceQuestion;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.Question;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,8 +138,8 @@ public class QuizServiceImpl implements QuizService {
   }
 
   @Override
-  public List<Quiz> getQuizzes() {
-    return quizRepository.findAll();
+  public List<FeaturedQuiz> getFeatured() {
+    return resultRepository.findFeatured();
   }
 
   @Override

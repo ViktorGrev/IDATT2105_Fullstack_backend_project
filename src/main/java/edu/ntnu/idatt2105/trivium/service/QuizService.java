@@ -2,7 +2,7 @@ package edu.ntnu.idatt2105.trivium.service;
 
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
-import edu.ntnu.idatt2105.trivium.model.quiz.leaderboard.LeaderboardEntry;
+import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,10 +24,9 @@ public interface QuizService {
 
   Page<Quiz> search(Specification<Quiz> spec, Pageable pageable);
 
-  List<Quiz> getQuizzes();
+  List<FeaturedQuiz> getFeatured();
 
   List<QuizResult> getLeaderboard(long id);
 
   List<QuizResult> getUserResults(long userId);
 }
-
