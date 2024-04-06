@@ -7,6 +7,10 @@ import edu.ntnu.idatt2105.trivium.exception.user.UsernameTakenException;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.repository.UserRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -15,6 +19,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -84,6 +91,16 @@ public class UserServiceImpl implements UserService {
     } else {
       throw new UserNotFoundException();
     }
+  }
+
+  @Override
+  public Map<String, User> findByUsernames(List<String> usernames) {
+    List<User> users = userRepository.findByUsernameIn(usernames);
+    Map<String, User> userMap = new HashMap<>();
+    for (User user : users) {
+      userMap.put(user.getUsername(), user);
+    }
+    return userMap;
   }
 
   /**

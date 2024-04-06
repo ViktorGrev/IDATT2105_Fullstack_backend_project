@@ -11,4 +11,11 @@ public final class UserNotFoundException extends RuntimeException {
   public UserNotFoundException() {
     super("User not found");
   }
+
+  /**
+   * Constructs a UserNotFoundException with the default message.
+   */
+  public UserNotFoundException(String string) {
+    super(string);
+  }
 }

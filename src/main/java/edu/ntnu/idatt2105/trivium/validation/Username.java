@@ -13,7 +13,7 @@ import java.lang.annotation.*;
  */
 @Documented
 @Constraint(validatedBy = UsernameValidator.class)
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Username {
 

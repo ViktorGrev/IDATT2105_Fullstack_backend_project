@@ -20,5 +20,6 @@ public class QuizDTO {
   private List<QuestionDTO> questions;
   private boolean random;
   private UserDTO creator;
+  private List<UserDTO> coAuthors;
 
 }

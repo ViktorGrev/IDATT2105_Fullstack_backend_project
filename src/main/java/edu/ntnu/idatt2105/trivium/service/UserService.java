@@ -6,6 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Service interface defining operations related to user management.
  */
@@ -39,6 +42,8 @@ public interface UserService {
    * @return A user.
    */
   User findByUsername(String username);
+
+  Map<String, User> findByUsernames(List<String> usernames);
 
   /**
    * Updates the username of a user.

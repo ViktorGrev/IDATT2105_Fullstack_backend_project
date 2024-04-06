@@ -55,6 +55,13 @@ public class Quiz {
   @JoinColumn(name = "creator_id", nullable = false)
   private User creator;
 
+  @ManyToMany(cascade = CascadeType.ALL)
+  @JoinTable(
+      name = "quiz_coauthors",
+      joinColumns = @JoinColumn(name = "quiz_id"),
+      inverseJoinColumns = @JoinColumn(name = "user_id"))
+  private List<User> coAuthors;
+
   public enum Category {
     CHEMISTRY,
     CALCULUS,

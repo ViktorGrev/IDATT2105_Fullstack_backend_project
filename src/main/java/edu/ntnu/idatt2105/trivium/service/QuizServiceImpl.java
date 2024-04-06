@@ -3,6 +3,7 @@ package edu.ntnu.idatt2105.trivium.service;
 import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.result.ResultNotFoundException;
+import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
 import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -36,10 +38,17 @@ public class QuizServiceImpl implements QuizService {
   private UserService userService;
 
   @Override
-  public Quiz createQuiz(long userId, Quiz quiz) {
+  public Quiz createQuiz(long userId, List<String> coAuthors, Quiz quiz) {
     User creator = userService.findById(userId);
     quiz.setCreator(creator);
     quiz.setTimestamp(Timestamp.from(Instant.now()));
+    Map<String, User> coAuthorMap = userService.findByUsernames(coAuthors);
+    for (String coAuthor : coAuthors) {
+      if (coAuthorMap.keySet().stream().noneMatch(username -> username.equalsIgnoreCase(coAuthor))) {
+        throw new UserNotFoundException("Co-author " + coAuthor + " not found");
+      }
+    }
+    quiz.setCoAuthors(coAuthorMap.values().stream().toList());
     return quizRepository.save(quiz);
   }
 

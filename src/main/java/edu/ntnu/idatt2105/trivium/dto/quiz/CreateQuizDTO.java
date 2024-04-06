@@ -26,6 +26,9 @@ public class CreateQuizDTO {
   @QuestionList
   private List<@Valid QuestionDTO> questions;
 
+  @CoAuthorList
+  private List<@Username String> coAuthors;
+
   private boolean random;
 
 }
