@@ -95,6 +95,13 @@
 			<artifactId>springdoc-openapi-starter-common</artifactId>
 			<version>2.0.4</version>
 		</dependency>
+
+		<!-- H2 Database -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<reporting>
@@ -175,6 +182,9 @@
 						<exclude>edu/ntnu/idatt2105/trivium/properties/**/*</exclude>
 						<exclude>edu/ntnu/idatt2105/trivium/exception/**/*</exclude>
 						<exclude>edu/ntnu/idatt2105/trivium/config/**/*</exclude>
+						<exclude>edu/ntnu/idatt2105/trivium/search/**/*</exclude>
+						<exclude>edu/ntnu/idatt2105/trivium/dto/**/*</exclude>
+						<exclude>edu/ntnu/idatt2105/trivium/model/**/*</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
