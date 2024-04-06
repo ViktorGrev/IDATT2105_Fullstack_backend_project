@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public interface QuizService {
 
-  Quiz createQuiz(long userId, Quiz quiz);
+  Quiz createQuiz(long userId, List<String> coAuthors, Quiz quiz);
 
   QuizResult answer(long userId, long quizId, List<Answer> answers);
 
