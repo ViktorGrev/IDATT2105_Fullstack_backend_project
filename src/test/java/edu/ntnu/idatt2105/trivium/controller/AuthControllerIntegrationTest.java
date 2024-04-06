@@ -3,6 +3,7 @@ package edu.ntnu.idatt2105.trivium.controller;
 import edu.ntnu.idatt2105.trivium.dto.auth.CredentialsRequest;
 import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
+import edu.ntnu.idatt2105.trivium.model.user.Role;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.properties.TokenProperties;
 import edu.ntnu.idatt2105.trivium.properties.UserProperties;
@@ -47,7 +48,10 @@ public class AuthControllerIntegrationTest {
     String username = "username";
     String password = "Password1";
     CredentialsRequest request = new CredentialsRequest(username, password);
-    given(userService.loginUser(username, password)).willReturn(new User());
+    User user = new User();
+    user.setUsername(username);
+    user.setRole(Role.USER);
+    given(userService.loginUser(username, password)).willReturn(user);
 
     mvc.perform(MockMvcRequestBuilders
             .post("/api/auth/login")
@@ -76,7 +80,10 @@ public class AuthControllerIntegrationTest {
     String username = "username";
     String password = "Password1";
     CredentialsRequest request = new CredentialsRequest(username, password);
-    given(userService.registerUser(username, password)).willReturn(new User());
+    User user = new User();
+    user.setUsername(username);
+    user.setRole(Role.USER);
+    given(userService.registerUser(username, password)).willReturn(user);
 
     mvc.perform(MockMvcRequestBuilders
             .post("/api/auth/signup")

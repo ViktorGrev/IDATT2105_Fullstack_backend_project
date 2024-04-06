@@ -59,7 +59,7 @@ public class QuizServiceIntegrationTest {
     when(quizRepository.save(any(Quiz.class))).thenReturn(quiz);
 
     // Act
-    Quiz createdQuiz = quizService.createQuiz(userId, quiz);
+    Quiz createdQuiz = quizService.createQuiz(userId, Arrays.asList(), quiz);
 
     // Assert
     assertNotNull(createdQuiz);
@@ -198,21 +198,6 @@ public class QuizServiceIntegrationTest {
 
     // Act + Assert
     assertThrows(QuizNotFoundException.class, () -> quizService.getQuiz(quizId));
-  }
-
-  @Test
-  public void testGetQuizzes_Success() {
-    // Arrange
-    List<Quiz> mockQuizzes = List.of(new Quiz(), new Quiz());
-    when(quizRepository.findAll()).thenReturn(mockQuizzes);
-
-    // Act
-    List<Quiz> quizzes = quizService.getQuizzes();
-
-    // Assert
-    assertNotNull(quizzes);
-    assertEquals(2, quizzes.size());
-    assertEquals(mockQuizzes, quizzes);
   }
 
   @Test

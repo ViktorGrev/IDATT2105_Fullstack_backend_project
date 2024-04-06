@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public final class PasswordValidator implements ConstraintValidator<Password, String> {
 
-  private Pattern pattern;
+  public Pattern pattern;
 
   /**
    * Initializes the validator.

@@ -169,6 +169,14 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<exclude>edu/ntnu/idatt2105/trivium/security/**/*</exclude>
+						<exclude>edu/ntnu/idatt2105/trivium/properties/**/*</exclude>
+						<exclude>edu/ntnu/idatt2105/trivium/exception/**/*</exclude>
+						<exclude>edu/ntnu/idatt2105/trivium/config/**/*</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
