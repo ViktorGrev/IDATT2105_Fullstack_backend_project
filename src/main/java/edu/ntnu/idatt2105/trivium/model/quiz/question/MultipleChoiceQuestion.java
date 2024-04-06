@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.trivium.model.quiz.question;
 
+import edu.ntnu.idatt2105.trivium.properties.QuizProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,12 +22,6 @@ public class MultipleChoiceQuestion extends Question {
   @JoinColumn(name = "multiple_choice_id")
   private List<Option> options;
 
-  public static class Config {
-
-    public static final int OPTIONS_MIN_SIZE = 1;
-    public static final int OPTIONS_MAX_SIZE = 50;
-  }
-
   @Getter
   @Builder
   @NoArgsConstructor
@@ -39,16 +34,10 @@ public class MultipleChoiceQuestion extends Question {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "option_text", length = Config.TEXT_MAX_LENGTH, nullable = false)
+    @Column(name = "option_text", length = QuizProperties.OPTION_TEXT_LEN_MAX, nullable = false)
     private String optionText;
 
     @Column(name = "correct", nullable = false)
     private boolean correct;
-
-    public static class Config {
-
-      public static final int TEXT_MIN_LENGTH = 4;
-      public static final int TEXT_MAX_LENGTH = 16;
-    }
   }
 }
