@@ -102,13 +102,22 @@ public class QuizServiceImpl implements QuizService {
 
   private int handleAnswer(MultipleChoiceQuestion question, Answer answer) {
     try {
-      int id = Integer.parseInt(answer.getAnswer());
-      MultipleChoiceQuestion.Option option = getOption(question, id);
-      if (option != null) {
-        return option.isCorrect() ? 1 : 0;
-      } else {
-        throw new InvalidAnswerFormatException("Answer option " + id + " not found for question " + question.getId());
+      String a = answer.getAnswer();
+      String[] tokens = a.substring(1, a.length() - 1).split(",");
+      List<Long> selectedOptions = new ArrayList<>();
+      for (String token : tokens) {
+        selectedOptions.add(Long.parseLong(token.trim()));
       }
+      boolean isCorrect = true;
+      for (MultipleChoiceQuestion.Option option : question.getOptions()) {
+        boolean hasSelected = selectedOptions.contains(option.getId());
+        if (!option.isCorrect() && hasSelected) {
+          isCorrect = false;
+        } else if (option.isCorrect() && !hasSelected) {
+          isCorrect = false;
+        }
+      }
+      return isCorrect ? 1 : 0;
     } catch (NumberFormatException e) {
       throw new InvalidAnswerFormatException(question.getId());
     }
@@ -197,7 +206,7 @@ public class QuizServiceImpl implements QuizService {
   @Override
   public QuizLibrary getLibrary(long userId) {
     List<Quiz> created = quizRepository.findAllByCreatorId(userId);
-    List<Quiz> coAuthored = quizRepository.findAllByCoAuthors_Id(userId);
+    List<Quiz> coAuthored = quizRepository.findAllByCoAuthorsId(userId);
     return new QuizLibrary(created, coAuthored);
   }
 }

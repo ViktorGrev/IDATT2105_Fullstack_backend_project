@@ -12,5 +12,5 @@ public interface QuizRepository extends JpaRepository<Quiz, Long>, JpaSpecificat
 
   List<Quiz> findAllByCreatorId(long userId);
 
-  List<Quiz> findAllByCoAuthors_Id(long userId);
+  List<Quiz> findAllByCoAuthorsId(long userId);
 }
