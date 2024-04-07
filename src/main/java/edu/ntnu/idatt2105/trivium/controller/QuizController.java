@@ -7,6 +7,7 @@ import edu.ntnu.idatt2105.trivium.dto.quiz.difficulty.QuizDifficultyDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.featured.FeaturedQuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.library.QuizLibraryDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.result.QuizResultDTO;
+import edu.ntnu.idatt2105.trivium.exception.user.PermissionDeniedException;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
 import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.QuizDifficulty;
@@ -66,8 +67,12 @@ public class QuizController {
   }
 
   @GetMapping("/results/{id}")
-  public ResponseEntity<QuizResultDTO> getResult(@PathVariable long id) {
+  public ResponseEntity<QuizResultDTO> getResult(@AuthenticationPrincipal AuthIdentity identity,
+                                                 @PathVariable long id) {
     QuizResult result = quizService.getResult(id);
+    if (identity.getId() != result.getUser().getId()) {
+      throw new PermissionDeniedException();
+    }
     QuizResultDTO resultDTO = modelMapper.map(result, QuizResultDTO.class);
     return ResponseEntity.ok(resultDTO);
   }

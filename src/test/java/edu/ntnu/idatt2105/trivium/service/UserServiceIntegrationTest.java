@@ -40,7 +40,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testRegisterUser_Success() {
+  public void testRegisterUserSuccess() {
     String username = "testuser";
     String password = "testpassword";
     when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
@@ -54,7 +54,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testRegisterUser_UserAlreadyExists() {
+  public void testRegisterUserUserAlreadyExists() {
     String username = "existingUser";
     String password = "testpassword";
     when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
@@ -64,7 +64,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testLoginUser_Success() {
+  public void testLoginUserSuccess() {
     String username = "existingUser";
     String password = "testpassword";
     User mockUser = new User(username, password);
@@ -78,7 +78,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testLoginUser_InvalidCredentials() {
+  public void testLoginUserInvalidCredentials() {
     String username = "existingUser";
     String password = "invalidPassword";
     User mockUser = new User(username, "testpassword");
@@ -89,7 +89,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testFindById_Success() {
+  public void testFindByIdSuccess() {
     long userId = 1L;
     User mockUser = new User("testuser", "testpassword");
     when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
@@ -101,7 +101,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testFindById_UserNotFound() {
+  public void testFindByIdUserNotFound() {
     long userId = 999L;
     when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -109,7 +109,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testFindByUsername_Success() {
+  public void testFindByUsernameSuccess() {
     String username = "testuser";
     User mockUser = new User(username, "testpassword");
     when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockUser));
@@ -121,7 +121,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testFindByUsername_UserNotFound() {
+  public void testFindByUsernameUserNotFound() {
     String username = "nonexistentUser";
     when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
@@ -129,7 +129,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testUpdateUsername_Success() {
+  public void testUpdateUsernameSuccess() {
     long userId = 1L;
     String newUsername = "newUsername";
     User mockUser = new User("oldUsername", "testpassword");
@@ -143,7 +143,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testUpdateUsername_UserNotFound() {
+  public void testUpdateUsernameUserNotFound() {
     long userId = 999L;
     String newUsername = "newUsername";
     when(userRepository.findById(userId)).thenReturn(Optional.empty());
@@ -152,7 +152,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void testUpdateUsername_UsernameTaken() {
+  public void testUpdateUsernameUsernameTaken() {
     long userId = 1L;
     String newUsername = "existingUsername";
     User mockUser = new User("oldUsername", "testpassword");

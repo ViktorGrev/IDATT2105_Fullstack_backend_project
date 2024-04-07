@@ -6,6 +6,7 @@ import edu.ntnu.idatt2105.trivium.dto.quiz.question.QuestionDTO;
 import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatException;
+import edu.ntnu.idatt2105.trivium.exception.user.PermissionDeniedException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.user.UsernameTakenException;
@@ -78,7 +79,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @return A ResponseEntity containing the error response.
    */
   @ExceptionHandler({InvalidCredentialsException.class, AccessDeniedException.class,
-      AuthenticationException.class, CredentialsExpiredException.class})
+      AuthenticationException.class, CredentialsExpiredException.class, PermissionDeniedException.class})
   public ResponseEntity<ExceptionResponse> handleUnauthorized(Exception e) {
     return ExceptionResponse.toResponseEntity(HttpStatus.UNAUTHORIZED, e.getMessage());
   }

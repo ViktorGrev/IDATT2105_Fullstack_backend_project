@@ -125,7 +125,7 @@ public class QuizServiceIntegrationTest {
     Quiz quiz = new Quiz();
     Answer answer = new Answer();
     answer.setQuestion(1L);
-    answer.setAnswer("1");
+    answer.setAnswer("[1]");
     List<Answer> answers = List.of(answer);
     MultipleChoiceQuestion question =MultipleChoiceQuestion.builder().id(1L).text("What is 1+1?").options(List.of(new MultipleChoiceQuestion.Option(1L, "2", true))).build();
     quiz.setQuestions(Arrays.asList(question));
