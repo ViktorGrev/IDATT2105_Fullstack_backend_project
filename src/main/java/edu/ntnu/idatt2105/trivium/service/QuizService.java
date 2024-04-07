@@ -2,6 +2,7 @@ package edu.ntnu.idatt2105.trivium.service;
 
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
+import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.QuizDifficulty;
 import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
 import org.springframework.data.domain.Page;
@@ -29,4 +30,8 @@ public interface QuizService {
   List<QuizResult> getLeaderboard(long id);
 
   List<QuizResult> getUserResults(long userId);
+
+  List<QuizResult> getResults(long quizId);
+
+  QuizDifficulty getDifficulty(long quizId);
 }

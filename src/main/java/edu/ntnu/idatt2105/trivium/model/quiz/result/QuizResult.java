@@ -38,7 +38,7 @@ public class QuizResult {
   @JoinColumn(name = "result_id")
   private List<Answer> answers;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "quiz_id", nullable = false)
   private Quiz quiz;
 }

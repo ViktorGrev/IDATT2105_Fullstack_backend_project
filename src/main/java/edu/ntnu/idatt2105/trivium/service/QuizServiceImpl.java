@@ -6,6 +6,8 @@ import edu.ntnu.idatt2105.trivium.exception.quiz.result.ResultNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
+import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.DifficultyLevel;
+import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.QuizDifficulty;
 import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.FillTheBlankQuestion;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.MultipleChoiceQuestion;
@@ -23,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -148,7 +152,14 @@ public class QuizServiceImpl implements QuizService {
 
   @Override
   public List<FeaturedQuiz> getFeatured() {
-    return resultRepository.findFeatured();
+    LocalDateTime lastDayDateTime = LocalDateTime.now().minusDays(1);
+    List<Object[]> a = resultRepository.findFeatured(lastDayDateTime);
+    List<FeaturedQuiz> featuredList = new ArrayList<>();
+    List<Quiz> quizzes = quizRepository.findAllById(a.stream().map(objects -> (Long) objects[0]).toList());
+    for (int i = 0; i < a.size(); i++) {
+      featuredList.add(new FeaturedQuiz(quizzes.get(i), (double) a.get(i)[1], (long) a.get(i)[2], (double) a.get(i)[3]));
+    }
+    return featuredList;
   }
 
   @Override
@@ -159,5 +170,26 @@ public class QuizServiceImpl implements QuizService {
   @Override
   public List<QuizResult> getUserResults(long userId) {
     return resultRepository.findAllByUserIdOrderByTimestampDesc(userId);
+  }
+
+  @Override
+  public List<QuizResult> getResults(long quizId) {
+    return resultRepository.findByQuizId(quizId);
+  }
+
+  @Override
+  public QuizDifficulty getDifficulty(long quizId) {
+    List<Integer> scores = new ArrayList<>();
+    Quiz quiz = getQuiz(quizId);
+    for (QuizResult result : getResults(quizId)) {
+      scores.add(calculateScore(quiz, result.getAnswers()));
+    }
+    int sum = 0;
+    for (int num : scores) {
+      sum += num;
+    }
+    double averageScore = (double) sum / scores.size();
+    double percentage = (averageScore / quiz.getQuestions().size()) * 100;
+    return new QuizDifficulty(averageScore, DifficultyLevel.fromPercentage(percentage));
   }
 }

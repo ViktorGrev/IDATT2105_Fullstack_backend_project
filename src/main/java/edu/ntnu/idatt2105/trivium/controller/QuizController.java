@@ -3,9 +3,12 @@ package edu.ntnu.idatt2105.trivium.controller;
 import edu.ntnu.idatt2105.trivium.dto.quiz.CreateQuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.QuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.answer.AnswerDTO;
+import edu.ntnu.idatt2105.trivium.dto.quiz.difficulty.QuizDifficultyDTO;
+import edu.ntnu.idatt2105.trivium.dto.quiz.featured.FeaturedQuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.result.QuizResultDTO;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
+import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.QuizDifficulty;
 import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
 import edu.ntnu.idatt2105.trivium.search.Specifications;
@@ -81,10 +84,17 @@ public class QuizController {
     return ResponseEntity.ok(quizDTO);
   }
 
+  @GetMapping("/{id}/difficulty")
+  public ResponseEntity<QuizDifficultyDTO> getQuizDifficulty(@PathVariable long id) {
+    QuizDifficulty difficulty = quizService.getDifficulty(id);
+    QuizDifficultyDTO quizDTO = modelMapper.map(difficulty, QuizDifficultyDTO.class);
+    return ResponseEntity.ok(quizDTO);
+  }
+
   @GetMapping("/featured")
-  public ResponseEntity<List<QuizDTO>> getFeatured() {
+  public ResponseEntity<List<FeaturedQuizDTO>> getFeatured() {
     List<FeaturedQuiz> quizzes = quizService.getFeatured();
-    List<QuizDTO> quizDTO = MapperUtils.mapList(quizzes, quiz -> modelMapper.map(quiz, QuizDTO.class));
+    List<FeaturedQuizDTO> quizDTO = MapperUtils.mapList(quizzes, quiz -> modelMapper.map(quiz, FeaturedQuizDTO.class));
     return ResponseEntity.ok(quizDTO);
   }
 
