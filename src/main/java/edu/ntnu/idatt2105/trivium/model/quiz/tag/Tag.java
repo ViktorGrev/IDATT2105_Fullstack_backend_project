@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Represents a {@link Tag} entity.
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

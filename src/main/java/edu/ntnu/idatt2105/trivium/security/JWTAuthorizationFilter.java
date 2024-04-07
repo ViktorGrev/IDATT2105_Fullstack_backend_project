@@ -6,7 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import edu.ntnu.idatt2105.trivium.model.user.Role;
-import edu.ntnu.idatt2105.trivium.utils.TokenUtils;
+import edu.ntnu.idatt2105.trivium.properties.TokenProperties;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,7 +74,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
    */
   public DecodedJWT validateToken(final String token) {
     try {
-      final Algorithm hmac512 = Algorithm.HMAC512(TokenUtils.SECRET);
+      final Algorithm hmac512 = Algorithm.HMAC512(TokenProperties.SECRET);
       final JWTVerifier verifier = JWT.require(hmac512).build();
       return verifier.verify(token);
     } catch (final JWTVerificationException verificationEx) {

@@ -3,6 +3,9 @@ package edu.ntnu.idatt2105.trivium.model.quiz.answer;
 import jakarta.persistence.*;
 import lombok.Data;
 
+/**
+ * Represents a {@link Answer} entity.
+ */
 @Data
 @Entity
 @Table(name = "answer")

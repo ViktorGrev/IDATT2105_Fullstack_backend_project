@@ -4,6 +4,9 @@ import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * Represents a {@link FeaturedQuiz} entity.
+ */
 @Data
 @AllArgsConstructor
 public class FeaturedQuiz {

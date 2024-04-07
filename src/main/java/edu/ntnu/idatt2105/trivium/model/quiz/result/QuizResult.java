@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * Represents a {@link QuizResult} entity.
+ */
 @Data
 @Builder
 @NoArgsConstructor

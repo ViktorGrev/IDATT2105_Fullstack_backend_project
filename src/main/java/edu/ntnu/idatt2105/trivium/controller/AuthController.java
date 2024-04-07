@@ -68,7 +68,7 @@ public class AuthController {
   @Operation(summary = "User Signup", description = "Handles user signup requests.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Successfully signed up"),
-      @ApiResponse(responseCode = "400", description = "User already exists",
+      @ApiResponse(responseCode = "409", description = "User already exists",
           content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
   })
   @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE,

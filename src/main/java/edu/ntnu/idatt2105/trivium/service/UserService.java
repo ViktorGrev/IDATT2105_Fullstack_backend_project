@@ -33,6 +33,12 @@ public interface UserService {
    */
   User loginUser(String username, String password);
 
+  /**
+   * Finds a user by their ID.
+   *
+   * @param id The ID of the user to find.
+   * @return The user with the specified ID.
+   */
   User findById(long id);
 
   /**
@@ -43,6 +49,12 @@ public interface UserService {
    */
   User findByUsername(String username);
 
+  /**
+   * Finds multiple users by their usernames.
+   *
+   * @param usernames The list of usernames to search for.
+   * @return A map containing the found users, with usernames as keys.
+   */
   Map<String, User> findByUsernames(List<String> usernames);
 
   /**
@@ -54,5 +66,12 @@ public interface UserService {
    */
   User updateUsername(long userId, String username);
 
+  /**
+   * Searches for users based on the given specifications and pageable information.
+   *
+   * @param spec     The specifications to filter users.
+   * @param pageable The pageable information for pagination.
+   * @return A page containing the users that match the specified criteria.
+   */
   Page<User> search(Specification<User> spec, Pageable pageable);
 }

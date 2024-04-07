@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2105.trivium.service;
 
-import edu.ntnu.idatt2105.trivium.dto.quiz.CreateQuizDTO;
 import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.result.ResultNotFoundException;
@@ -36,16 +35,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Implementation of the QuizService interface providing operations related to quizzes.
+ */
 @Service
 public class QuizServiceImpl implements QuizService {
 
   @Autowired
   private QuizRepository quizRepository;
+
   @Autowired
   private QuizResultRepository resultRepository;
+
   @Autowired
   private UserService userService;
 
+  /**
+   * Creates a new quiz.
+   *
+   * @param userId    The ID of the user creating the quiz.
+   * @param coAuthors The list of co-authors for the quiz.
+   * @param quiz      The quiz object to be created.
+   * @return The created quiz.
+   */
   @Override
   public Quiz createQuiz(long userId, List<String> coAuthors, Quiz quiz) {
     User creator = userService.findById(userId);
@@ -61,6 +73,14 @@ public class QuizServiceImpl implements QuizService {
     return quizRepository.save(quiz);
   }
 
+  /**
+   * Allows a user to answer a quiz.
+   *
+   * @param userId  The ID of the user answering the quiz.
+   * @param quizId  The ID of the quiz being answered.
+   * @param answers The list of answers provided by the user.
+   * @return The quiz result.
+   */
   @Override
   public QuizResult answer(long userId, long quizId, List<Answer> answers) {
     User user = userService.findById(userId);
@@ -72,6 +92,13 @@ public class QuizServiceImpl implements QuizService {
     return resultRepository.save(result);
   }
 
+  /**
+   * Retrieves a quiz result by its ID.
+   *
+   * @param resultId The ID of the quiz result to retrieve.
+   * @return The quiz result.
+   * @throws ResultNotFoundException If the quiz result is not found.
+   */
   @Override
   public QuizResult getResult(long resultId) {
     Optional<QuizResult> optionalResult = resultRepository.findById(resultId);
@@ -82,6 +109,13 @@ public class QuizServiceImpl implements QuizService {
     }
   }
 
+  /**
+   * Calculates the score for a quiz based on the provided answers.
+   *
+   * @param quiz    The quiz for which the score is calculated.
+   * @param answers The list of answers provided by the user.
+   * @return The calculated score.
+   */
   public int calculateScore(Quiz quiz, List<Answer> answers) {
     int score = 0;
     for (Answer answer : answers) {
@@ -99,11 +133,26 @@ public class QuizServiceImpl implements QuizService {
     return score;
   }
 
+  /**
+   * Handles the answer for a TrueFalseQuestion.
+   *
+   * @param question The TrueFalseQuestion object.
+   * @param answer   The Answer object containing the user's answer.
+   * @return 1 if the answer is correct, 0 otherwise.
+   */
   private int handleAnswer(TrueFalseQuestion question, Answer answer) {
     boolean b = Boolean.parseBoolean(answer.getAnswer());
     return b == question.isTrue() ? 1 : 0;
   }
 
+  /**
+   * Handles the answer for a MultipleChoiceQuestion.
+   *
+   * @param question The MultipleChoiceQuestion object.
+   * @param answer   The Answer object containing the user's answer.
+   * @return 1 if the answer is correct, 0 otherwise.
+   * @throws InvalidAnswerFormatException If the answer format is invalid.
+   */
   private int handleAnswer(MultipleChoiceQuestion question, Answer answer) {
     try {
       String a = answer.getAnswer();
@@ -128,10 +177,24 @@ public class QuizServiceImpl implements QuizService {
     }
   }
 
+  /**
+   * Handles the answer for a FillTheBlankQuestion.
+   *
+   * @param question The FillTheBlankQuestion object.
+   * @param answer   The Answer object containing the user's answer.
+   * @return 1 if the answer is correct, 0 otherwise.
+   */
   private int handleAnswer(FillTheBlankQuestion question, Answer answer) {
     return answer.getAnswer().equalsIgnoreCase(question.getSolution()) ? 1 : 0;
   }
 
+  /**
+   * Retrieves the question from a quiz by its ID.
+   *
+   * @param quiz       The Quiz object containing the questions.
+   * @param questionId The ID of the question to retrieve.
+   * @return The Question object corresponding to the ID, or null if not found.
+   */
   private Question getQuestion(Quiz quiz, long questionId) {
     for (Question question : quiz.getQuestions()) {
       if (question.getId().equals(questionId)) {
@@ -141,15 +204,13 @@ public class QuizServiceImpl implements QuizService {
     return null;
   }
 
-  private MultipleChoiceQuestion.Option getOption(MultipleChoiceQuestion question, long optionId) {
-    for (MultipleChoiceQuestion.Option option : question.getOptions()) {
-      if (option.getId().equals(optionId)) {
-        return option;
-      }
-    }
-    return null;
-  }
-
+  /**
+   * Retrieves a quiz by its ID.
+   *
+   * @param id The ID of the quiz to retrieve.
+   * @return The retrieved quiz.
+   * @throws QuizNotFoundException If the quiz is not found.
+   */
   @Override
   public Quiz getQuiz(long id) {
     Optional<Quiz> optionalQuiz = quizRepository.findById(id);
@@ -160,6 +221,14 @@ public class QuizServiceImpl implements QuizService {
     }
   }
 
+  /**
+   * Updates an existing quiz.
+   *
+   * @param quiz     The updated quiz object.
+   * @param identity The authentication identity of the user performing the operation.
+   * @return The updated quiz.
+   * @throws PermissionDeniedException If the user does not have permission to update the quiz.
+   */
   @Override
   public Quiz updateQuiz(Quiz quiz, AuthIdentity identity) {
     if (!canEdit(identity, quiz)) {
@@ -174,6 +243,14 @@ public class QuizServiceImpl implements QuizService {
         || quiz.getCreator().getId() == identity.getId();
   }
 
+  /**
+   * Deletes a quiz.
+   *
+   * @param quizId   The ID of the quiz to delete.
+   * @param identity The authentication identity of the user performing the operation.
+   * @throws PermissionDeniedException If the user does not have permission to delete the quiz.
+   * @throws QuizNotFoundException     If the quiz is not found.
+   */
   @Override
   public void deleteQuiz(long quizId, AuthIdentity identity) {
     Optional<Quiz> optionalQuiz = quizRepository.findById(quizId);
@@ -192,11 +269,23 @@ public class QuizServiceImpl implements QuizService {
     return identity.getRole().equals(Role.ADMIN.name()) || quiz.getCreator().getId() == identity.getId();
   }
 
+  /**
+   * Searches for quizzes based on the specified criteria.
+   *
+   * @param spec     The specification for filtering quizzes.
+   * @param pageable The pagination information.
+   * @return A page of matching quizzes.
+   */
   @Override
   public Page<Quiz> search(Specification<Quiz> spec, Pageable pageable) {
     return quizRepository.findAll(spec, pageable);
   }
 
+  /**
+   * Retrieves a list of featured quizzes.
+   *
+   * @return A list of featured quizzes.
+   */
   @Override
   public List<FeaturedQuiz> getFeatured() {
     LocalDateTime lastDayDateTime = LocalDateTime.now().minusDays(1);
@@ -209,21 +298,45 @@ public class QuizServiceImpl implements QuizService {
     return featuredList;
   }
 
+  /**
+   * Retrieves the leaderboard for a quiz.
+   *
+   * @param id The ID of the quiz.
+   * @return The leaderboard for the quiz.
+   */
   @Override
   public List<QuizResult> getLeaderboard(long id) {
     return resultRepository.findByQuizIdOrderByScoreDesc(id);
   }
 
+  /**
+   * Retrieves the quiz results for a user.
+   *
+   * @param userId The ID of the user.
+   * @return The quiz results for the user.
+   */
   @Override
   public List<QuizResult> getUserResults(long userId) {
     return resultRepository.findAllByUserIdOrderByTimestampDesc(userId);
   }
 
+  /**
+   * Retrieves the quiz results for a quiz.
+   *
+   * @param quizId The ID of the quiz.
+   * @return The quiz results for the quiz.
+   */
   @Override
   public List<QuizResult> getResults(long quizId) {
     return resultRepository.findByQuizId(quizId);
   }
 
+  /**
+   * Retrieves the difficulty level of a quiz.
+   *
+   * @param quizId The ID of the quiz.
+   * @return The difficulty level of the quiz.
+   */
   @Override
   public QuizDifficulty getDifficulty(long quizId) {
     List<Integer> scores = new ArrayList<>();
@@ -240,6 +353,12 @@ public class QuizServiceImpl implements QuizService {
     return new QuizDifficulty(averageScore, DifficultyLevel.fromPercentage(percentage));
   }
 
+  /**
+   * Retrieves the library of quizzes for a user.
+   *
+   * @param userId The ID of the user.
+   * @return The library of quizzes for the user.
+   */
   @Override
   public QuizLibrary getLibrary(long userId) {
     List<Quiz> created = quizRepository.findAllByCreatorId(userId);

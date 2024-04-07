@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Represents a {@link FillTheBlankQuestion} entity.
+ */
 @Getter
 @SuperBuilder
 @NoArgsConstructor

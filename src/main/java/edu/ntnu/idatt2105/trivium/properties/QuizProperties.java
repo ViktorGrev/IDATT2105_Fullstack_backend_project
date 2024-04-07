@@ -2,6 +2,9 @@ package edu.ntnu.idatt2105.trivium.properties;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * Component containing properties related to quiz creation and validation.
+ */
 @Component
 public final class QuizProperties {
 

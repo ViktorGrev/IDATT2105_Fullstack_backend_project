@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Represents a user in the system.
  * This class implements the UserDetails interface, providing the necessary information for Spring Security
- * to authenticate and authorize users.
+ * to authenticate and authorize users and for use in testing.
  */
 @Data
 @NoArgsConstructor

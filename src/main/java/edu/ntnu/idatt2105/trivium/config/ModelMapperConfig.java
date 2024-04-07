@@ -13,13 +13,22 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration class for the ModelMapper bean.
+ */
 @Configuration
 public class ModelMapperConfig {
 
+  /**
+   * Configures and provides the ModelMapper bean.
+   *
+   * @return ModelMapper bean configured with custom mappings.
+   */
   @Bean
   public ModelMapper modelMapper() {
     ModelMapper modelMapper = new ModelMapper();
 
+    // Tag
     modelMapper.createTypeMap(String.class, Tag.class).setConverter(
         context -> Tag.builder().name(context.getSource().toLowerCase())
             .build());
@@ -27,6 +36,7 @@ public class ModelMapperConfig {
     modelMapper.createTypeMap(Tag.class, String.class)
         .setConverter(context -> context.getSource().getName().toLowerCase());
 
+    // Fill in the blank question
     modelMapper.createTypeMap(FillTheBlankQuestionDTO.class, Question.class)
         .setConverter(context -> {
           FillTheBlankQuestionDTO dto = context.getSource();
@@ -41,6 +51,7 @@ public class ModelMapperConfig {
               .solution(dto.getSolution()).build();
         });
 
+    // Multiple choice question
     modelMapper.createTypeMap(MultipleChoiceQuestionDTO.class, Question.class)
         .setConverter(context -> {
           MultipleChoiceQuestionDTO dto = context.getSource();
@@ -58,6 +69,7 @@ public class ModelMapperConfig {
                   .toList()).build();
         });
 
+    // True false question
     modelMapper.createTypeMap(TrueFalseQuestionDTO.class, Question.class)
         .setConverter(context -> {
           TrueFalseQuestionDTO dto = context.getSource();

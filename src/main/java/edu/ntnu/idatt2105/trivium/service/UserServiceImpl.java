@@ -4,13 +4,8 @@ import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.user.UsernameTakenException;
-import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.repository.UserRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -30,17 +25,19 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-  private final PasswordEncoder passwordEncoder;
-  private final UserRepository userRepository;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
-  }
+  private UserRepository userRepository;
 
   /**
-   * {@inheritDoc}
+   * Registers a new user with the provided username and password.
+   *
+   * @param username The username of the user to register.
+   * @param password The password of the user to register.
+   * @return The registered user.
+   * @throws UserAlreadyExistsException If a user with the provided username already exists.
    */
   @Override
   public User registerUser(String username, String password) {
@@ -54,7 +51,12 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * {@inheritDoc}
+   * Logs in a user with the provided username and password.
+   *
+   * @param username The username of the user to login.
+   * @param password The password of the user to login.
+   * @return The logged-in user.
+   * @throws InvalidCredentialsException If the provided credentials are invalid.
    */
   @Override
   public User loginUser(String username, String password) {
@@ -68,7 +70,11 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * {@inheritDoc}
+   * Finds a user by their ID.
+   *
+   * @param id The ID of the user to find.
+   * @return The user with the specified ID.
+   * @throws UserNotFoundException If no user with the provided ID is found.
    */
   @Override
   public User findById(long id) {
@@ -81,7 +87,11 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * {@inheritDoc}
+   * Finds a user by their username.
+   *
+   * @param username The username of the user to find.
+   * @return The user with the specified username.
+   * @throws UserNotFoundException If no user with the provided username is found.
    */
   @Override
   public User findByUsername(String username) {
@@ -93,6 +103,12 @@ public class UserServiceImpl implements UserService {
     }
   }
 
+  /**
+   * Finds multiple users by their usernames.
+   *
+   * @param usernames The list of usernames to search for.
+   * @return A map containing the found users, with usernames as keys.
+   */
   @Override
   public Map<String, User> findByUsernames(List<String> usernames) {
     List<User> users = userRepository.findByUsernameIn(usernames);
@@ -104,7 +120,13 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * {@inheritDoc}
+   * Updates the username of a user.
+   *
+   * @param userId   The ID of the user.
+   * @param username The new username to update.
+   * @return The updated user.
+   * @throws UserNotFoundException   If no user with the provided ID is found.
+   * @throws UsernameTakenException  If the new username is already taken by another user.
    */
   @Override
   public User updateUsername(long userId, String username) {
@@ -122,6 +144,13 @@ public class UserServiceImpl implements UserService {
     }
   }
 
+  /**
+   * Searches for users based on the given specifications and pageable information.
+   *
+   * @param spec     The specifications to filter users.
+   * @param pageable The pageable information for pagination.
+   * @return A page containing the users that match the specified criteria.
+   */
   @Override
   public Page<User> search(Specification<User> spec, Pageable pageable) {
     return userRepository.findAll(spec, pageable);

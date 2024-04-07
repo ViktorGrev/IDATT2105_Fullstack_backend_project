@@ -31,6 +31,7 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
   @Autowired
   private ModelMapper modelMapper;
 
@@ -49,6 +50,12 @@ public class UserController {
     return ResponseEntity.ok(userDTO);
   }
 
+  /**
+   * Retrieves a user by username.
+   *
+   * @param username The username of the user to retrieve.
+   * @return ResponseEntity containing the UserDTO.
+   */
   @GetMapping("/{username}")
   public ResponseEntity<UserDTO> getUserByUsername(@PathVariable @Username String username) {
     User user = userService.findByUsername(username);
@@ -56,6 +63,12 @@ public class UserController {
     return ResponseEntity.ok(userDTO);
   }
 
+  /**
+   * Retrieves the currently authenticated user.
+   *
+   * @param identity The authenticated user's identity.
+   * @return ResponseEntity containing the UserDTO of the authenticated user.
+   */
   @GetMapping("/self")
   public ResponseEntity<UserDTO> getSelf(@AuthenticationPrincipal AuthIdentity identity) {
     User user = userService.findById(identity.getId());
@@ -63,6 +76,13 @@ public class UserController {
     return ResponseEntity.ok(userDTO);
   }
 
+  /**
+   * Searches for users based on the specified username.
+   *
+   * @param username The username to search for.
+   * @param pageable The pageable object for pagination.
+   * @return ResponseEntity containing a list of UserDTOs matching the search criteria.
+   */
   @PostMapping(value = "/search")
   public ResponseEntity<List<UserDTO>> search(@RequestParam(required = false) String username, Pageable pageable) {
     Specification<User> spec = Specification.where(null);

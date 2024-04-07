@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * Represents a {@link Quiz} entity.
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -62,6 +65,9 @@ public class Quiz {
       inverseJoinColumns = @JoinColumn(name = "user_id"))
   private List<User> coAuthors;
 
+  /**
+   * Enum representing quiz categories.
+   */
   public enum Category {
     CHEMISTRY,
     CALCULUS,

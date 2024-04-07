@@ -10,6 +10,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+/**
+ * Represents a {@link MultipleChoiceQuestion} entity.
+ */
 @Getter
 @SuperBuilder
 @NoArgsConstructor
@@ -22,6 +25,9 @@ public class MultipleChoiceQuestion extends Question {
   @JoinColumn(name = "multiple_choice_id")
   private List<Option> options;
 
+  /**
+   * Represents a {@link Option} entity.
+   */
   @Getter
   @Builder
   @NoArgsConstructor

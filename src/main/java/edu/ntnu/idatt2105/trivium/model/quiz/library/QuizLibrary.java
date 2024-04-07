@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Represents a {@link QuizLibrary} entity.
+ */
 @Data
 @AllArgsConstructor
 public class QuizLibrary {
