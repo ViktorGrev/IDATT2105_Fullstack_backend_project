@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.trivium.service;
 
+import edu.ntnu.idatt2105.trivium.dto.quiz.CreateQuizDTO;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
 import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.QuizDifficulty;
@@ -24,6 +25,8 @@ public interface QuizService {
   QuizResult getResult(long resultId);
 
   Quiz getQuiz(long id);
+
+  Quiz updateQuiz(Quiz quiz, AuthIdentity identity);
 
   void deleteQuiz(long quizId, AuthIdentity identity);
 

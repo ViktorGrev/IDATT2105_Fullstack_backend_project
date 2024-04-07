@@ -98,6 +98,15 @@ public class QuizController {
     return ResponseEntity.ok(quizDTO);
   }
 
+  @PutMapping("/{id}")
+  public ResponseEntity<QuizDTO> updateQuiz(@AuthenticationPrincipal AuthIdentity identity,
+                                            @Validated @RequestBody QuizDTO updateQuizDTO) {
+    Quiz quiz = modelMapper.map(updateQuizDTO, Quiz.class);
+    Quiz updatedQuiz = quizService.updateQuiz(quiz, identity);
+    QuizDTO quizDTO = modelMapper.map(updatedQuiz, QuizDTO.class);
+    return ResponseEntity.ok(quizDTO);
+  }
+
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteQuiz(@AuthenticationPrincipal AuthIdentity identity,
                                             @PathVariable long id) {

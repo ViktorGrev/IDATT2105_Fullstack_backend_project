@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.trivium.service;
 
+import edu.ntnu.idatt2105.trivium.dto.quiz.CreateQuizDTO;
 import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.result.ResultNotFoundException;
@@ -160,6 +161,20 @@ public class QuizServiceImpl implements QuizService {
   }
 
   @Override
+  public Quiz updateQuiz(Quiz quiz, AuthIdentity identity) {
+    if (!canEdit(identity, quiz)) {
+      throw new PermissionDeniedException();
+    }
+    return quizRepository.save(quiz);
+  }
+
+  public boolean canEdit(AuthIdentity identity, Quiz quiz) {
+    return identity.getRole().equals(Role.ADMIN.name())
+        || quiz.getCoAuthors().stream().anyMatch(coAuthor -> coAuthor.getId() == identity.getId())
+        || quiz.getCreator().getId() == identity.getId();
+  }
+
+  @Override
   public void deleteQuiz(long quizId, AuthIdentity identity) {
     Optional<Quiz> optionalQuiz = quizRepository.findById(quizId);
     if (optionalQuiz.isPresent()) {
@@ -171,12 +186,6 @@ public class QuizServiceImpl implements QuizService {
     } else {
       throw new QuizNotFoundException();
     }
-  }
-
-  public boolean canEdit(AuthIdentity identity, Quiz quiz) {
-    return identity.getRole().equals(Role.ADMIN.name())
-        || quiz.getCoAuthors().stream().anyMatch(coAuthor -> coAuthor.getId() == identity.getId())
-        || quiz.getCreator().getId() == identity.getId();
   }
 
   public boolean canDelete(AuthIdentity identity, Quiz quiz) {
