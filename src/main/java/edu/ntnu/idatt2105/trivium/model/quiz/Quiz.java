@@ -51,7 +51,7 @@ public class Quiz {
   @Column(name = "random", nullable = false)
   private boolean random;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "creator_id", nullable = false)
   private User creator;
 

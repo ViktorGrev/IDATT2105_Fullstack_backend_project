@@ -3,6 +3,7 @@ package edu.ntnu.idatt2105.trivium.service;
 import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.result.ResultNotFoundException;
+import edu.ntnu.idatt2105.trivium.exception.user.PermissionDeniedException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
@@ -15,9 +16,11 @@ import edu.ntnu.idatt2105.trivium.model.quiz.question.MultipleChoiceQuestion;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.Question;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.TrueFalseQuestion;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
+import edu.ntnu.idatt2105.trivium.model.user.Role;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.repository.QuizRepository;
 import edu.ntnu.idatt2105.trivium.repository.QuizResultRepository;
+import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -154,6 +157,30 @@ public class QuizServiceImpl implements QuizService {
     } else {
       throw new QuizNotFoundException();
     }
+  }
+
+  @Override
+  public void deleteQuiz(long quizId, AuthIdentity identity) {
+    Optional<Quiz> optionalQuiz = quizRepository.findById(quizId);
+    if (optionalQuiz.isPresent()) {
+      Quiz quiz = optionalQuiz.get();
+      if (!canDelete(identity, quiz)) {
+        throw new PermissionDeniedException();
+      }
+      quizRepository.delete(quiz);
+    } else {
+      throw new QuizNotFoundException();
+    }
+  }
+
+  public boolean canEdit(AuthIdentity identity, Quiz quiz) {
+    return identity.getRole().equals(Role.ADMIN.name())
+        || quiz.getCoAuthors().stream().anyMatch(coAuthor -> coAuthor.getId() == identity.getId())
+        || quiz.getCreator().getId() == identity.getId();
+  }
+
+  public boolean canDelete(AuthIdentity identity, Quiz quiz) {
+    return identity.getRole().equals(Role.ADMIN.name()) || quiz.getCreator().getId() == identity.getId();
   }
 
   @Override

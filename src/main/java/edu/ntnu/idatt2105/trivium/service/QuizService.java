@@ -6,6 +6,7 @@ import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.QuizDifficulty;
 import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.library.QuizLibrary;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
+import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,6 +24,8 @@ public interface QuizService {
   QuizResult getResult(long resultId);
 
   Quiz getQuiz(long id);
+
+  void deleteQuiz(long quizId, AuthIdentity identity);
 
   Page<Quiz> search(Specification<Quiz> spec, Pageable pageable);
 

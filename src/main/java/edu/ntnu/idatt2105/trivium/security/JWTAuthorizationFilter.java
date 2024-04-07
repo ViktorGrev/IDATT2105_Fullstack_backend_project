@@ -56,7 +56,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
     long userId = Long.parseLong(decodedJWT.getSubject());
     String userRole = decodedJWT.getClaim("user_role").asString();
-    String role = userRole.equals(Role.ADMIN.name()) ? "ROLE_ADMIN" : "ROLE_USER";
+    String role = userRole.equals(Role.ADMIN.name()) ? "ADMIN" : "USER";
 
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
         new AuthIdentity(userId, role), null,

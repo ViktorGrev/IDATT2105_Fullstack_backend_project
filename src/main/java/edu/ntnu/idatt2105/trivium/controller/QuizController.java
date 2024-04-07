@@ -98,6 +98,13 @@ public class QuizController {
     return ResponseEntity.ok(quizDTO);
   }
 
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteQuiz(@AuthenticationPrincipal AuthIdentity identity,
+                                            @PathVariable long id) {
+    quizService.deleteQuiz(id, identity);
+    return ResponseEntity.ok().build();
+  }
+
   @GetMapping("/{id}/difficulty")
   public ResponseEntity<QuizDifficultyDTO> getQuizDifficulty(@PathVariable long id) {
     QuizDifficulty difficulty = quizService.getDifficulty(id);
