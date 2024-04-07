@@ -348,7 +348,7 @@ public class QuizServiceImpl implements QuizService {
     for (int num : scores) {
       sum += num;
     }
-    double averageScore = (double) sum / scores.size();
+    double averageScore = scores.isEmpty() ? 0 : (double) sum / scores.size();
     double percentage = (averageScore / quiz.getQuestions().size()) * 100;
     return new QuizDifficulty(averageScore, DifficultyLevel.fromPercentage(percentage));
   }

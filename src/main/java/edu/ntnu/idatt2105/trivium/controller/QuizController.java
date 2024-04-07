@@ -7,6 +7,7 @@ import edu.ntnu.idatt2105.trivium.dto.quiz.difficulty.QuizDifficultyDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.featured.FeaturedQuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.library.QuizLibraryDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.result.QuizResultDTO;
+import edu.ntnu.idatt2105.trivium.exception.ExceptionResponse;
 import edu.ntnu.idatt2105.trivium.exception.user.PermissionDeniedException;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
@@ -17,6 +18,11 @@ import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
 import edu.ntnu.idatt2105.trivium.search.Specifications;
 import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
 import edu.ntnu.idatt2105.trivium.service.QuizService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +62,12 @@ public class QuizController {
    * @param createQuizDTO DTO containing information for creating a quiz.
    * @return ResponseEntity containing the created quiz DTO.
    */
+  @Operation(summary = "Create a quiz", description = "Creates a new quiz.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully created a quiz"),
+      @ApiResponse(responseCode = "400", description = "Invalid quiz data",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+  })
   @PostMapping
   public ResponseEntity<QuizDTO> create(@AuthenticationPrincipal AuthIdentity identity,
                                   @Validated @RequestBody CreateQuizDTO createQuizDTO) {
@@ -73,6 +85,12 @@ public class QuizController {
    * @param answersDTO  List of answer DTOs submitted by the user.
    * @return ResponseEntity containing the quiz result DTO.
    */
+  @Operation(summary = "Answer a quiz", description = "Answer a quiz and receive the results.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully answered a quiz"),
+      @ApiResponse(responseCode = "400", description = "Invalid quiz data",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+  })
   @PostMapping("/{id}/answers")
   public ResponseEntity<QuizResultDTO> answer(
       @AuthenticationPrincipal AuthIdentity identity,
@@ -92,6 +110,14 @@ public class QuizController {
    * @param id       The ID of the quiz result.
    * @return ResponseEntity containing the quiz result DTO.
    */
+  @Operation(summary = "Get quiz result", description = "Get a quiz result from the ID")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully getting the result"),
+      @ApiResponse(responseCode = "404", description = "Result not found",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+      @ApiResponse(responseCode = "401", description = "Permission denied",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+  })
   @GetMapping("/results/{id}")
   public ResponseEntity<QuizResultDTO> getResult(@AuthenticationPrincipal AuthIdentity identity,
                                                  @PathVariable long id) {
@@ -109,6 +135,10 @@ public class QuizController {
    * @param userId The ID of the user.
    * @return ResponseEntity containing a list of quiz result DTOs.
    */
+  @Operation(summary = "Get all user result", description = "Get all user results for a given user.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully getting the results")
+  })
   @GetMapping("/results/users/{userId}")
   public ResponseEntity<List<QuizResultDTO>> getUserResults(@PathVariable long userId) {
     List<QuizResult> results = quizService.getUserResults(userId);
@@ -122,6 +152,10 @@ public class QuizController {
    * @param userId The ID of the user.
    * @return ResponseEntity containing the quiz library DTO.
    */
+  @Operation(summary = "Get user library", description = "Get all quizzes a user has created or co-authored.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully got the library")
+  })
   @GetMapping("/library/{userId}")
   public ResponseEntity<QuizLibraryDTO> getLibrary(@PathVariable long userId) {
     QuizLibrary library = quizService.getLibrary(userId);
@@ -135,6 +169,12 @@ public class QuizController {
    * @param id The ID of the quiz.
    * @return ResponseEntity containing the quiz DTO.
    */
+  @Operation(summary = "Get a quiz", description = "Get a quiz by its ID.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "Quiz not found",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+  })
   @GetMapping("/{id}")
   public ResponseEntity<QuizDTO> getQuiz(@PathVariable long id) {
     Quiz quiz = quizService.getQuiz(id);
@@ -149,6 +189,12 @@ public class QuizController {
    * @param updateQuizDTO DTO containing information for updating a quiz.
    * @return ResponseEntity containing the updated quiz DTO.
    */
+  @Operation(summary = "Update a quiz", description = "Update a quiz with new information.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "401", description = "Permission denied",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+  })
   @PutMapping("/{id}")
   public ResponseEntity<QuizDTO> updateQuiz(@AuthenticationPrincipal AuthIdentity identity,
                                             @Validated @RequestBody QuizDTO updateQuizDTO) {
@@ -165,6 +211,14 @@ public class QuizController {
    * @param id       The ID of the quiz to delete.
    * @return ResponseEntity with no content.
    */
+  @Operation(summary = "Delete a quiz", description = "Delete a quiz by its ID.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "Quiz not found",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+      @ApiResponse(responseCode = "401", description = "Permission denied",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+  })
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteQuiz(@AuthenticationPrincipal AuthIdentity identity,
                                          @PathVariable long id) {
@@ -178,6 +232,12 @@ public class QuizController {
    * @param id The ID of the quiz.
    * @return ResponseEntity containing the quiz difficulty DTO.
    */
+  @Operation(summary = "Get quiz difficulty", description = "Get the difficulty of a quiz by its ID.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "Quiz not found",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+  })
   @GetMapping("/{id}/difficulty")
   public ResponseEntity<QuizDifficultyDTO> getQuizDifficulty(@PathVariable long id) {
     QuizDifficulty difficulty = quizService.getDifficulty(id);
@@ -190,6 +250,10 @@ public class QuizController {
    *
    * @return ResponseEntity containing a list of featured quiz DTOs.
    */
+  @Operation(summary = "Get featured quizzes", description = "Get a list of features quizzes.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success")
+  })
   @GetMapping("/featured")
   public ResponseEntity<List<FeaturedQuizDTO>> getFeatured() {
     List<FeaturedQuiz> quizzes = quizService.getFeatured();
@@ -206,6 +270,10 @@ public class QuizController {
    * @param category    The category of the quiz (optional).
    * @return ResponseEntity containing a list of quiz DTOs that match the search criteria.
    */
+  @Operation(summary = "Search for quizzes", description = "Search for quizzes matching the parameters.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success")
+  })
   @PostMapping("/search")
   public ResponseEntity<List<QuizDTO>> search(
       @RequestParam(required = false) String title,
@@ -233,6 +301,12 @@ public class QuizController {
    * @param id The ID of the quiz.
    * @return ResponseEntity containing a list of quiz result DTOs representing the leaderboard.
    */
+  @Operation(summary = "Get the leaderboard", description = "Get the leaderboard for a quiz.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "Quiz not found",
+          content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+  })
   @GetMapping("/{id}/leaderboard")
   public ResponseEntity<List<QuizResultDTO>> getLeaderboard(@PathVariable long id) {
     List<QuizResult> quizzes = quizService.getLeaderboard(id);
