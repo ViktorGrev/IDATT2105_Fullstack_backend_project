@@ -9,6 +9,7 @@ import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
 import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.DifficultyLevel;
 import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.QuizDifficulty;
 import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
+import edu.ntnu.idatt2105.trivium.model.quiz.library.QuizLibrary;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.FillTheBlankQuestion;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.MultipleChoiceQuestion;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.Question;
@@ -191,5 +192,12 @@ public class QuizServiceImpl implements QuizService {
     double averageScore = (double) sum / scores.size();
     double percentage = (averageScore / quiz.getQuestions().size()) * 100;
     return new QuizDifficulty(averageScore, DifficultyLevel.fromPercentage(percentage));
+  }
+
+  @Override
+  public QuizLibrary getLibrary(long userId) {
+    List<Quiz> created = quizRepository.findAllByCreatorId(userId);
+    List<Quiz> coAuthored = quizRepository.findAllByCoAuthors_Id(userId);
+    return new QuizLibrary(created, coAuthored);
   }
 }

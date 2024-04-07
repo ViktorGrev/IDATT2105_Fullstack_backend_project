@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Long>, JpaSpecificationExecutor<Quiz> {
 
-  //List<Quiz> findAllBy
+  List<Quiz> findAllByCreatorId(long userId);
+
+  List<Quiz> findAllByCoAuthors_Id(long userId);
 }

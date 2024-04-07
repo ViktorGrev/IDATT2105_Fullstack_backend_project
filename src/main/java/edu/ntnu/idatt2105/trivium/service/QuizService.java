@@ -4,6 +4,7 @@ import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
 import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.QuizDifficulty;
 import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
+import edu.ntnu.idatt2105.trivium.model.quiz.library.QuizLibrary;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,4 +35,6 @@ public interface QuizService {
   List<QuizResult> getResults(long quizId);
 
   QuizDifficulty getDifficulty(long quizId);
+
+  QuizLibrary getLibrary(long userId);
 }

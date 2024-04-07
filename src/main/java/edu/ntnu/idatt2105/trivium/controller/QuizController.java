@@ -5,11 +5,13 @@ import edu.ntnu.idatt2105.trivium.dto.quiz.QuizDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.answer.AnswerDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.difficulty.QuizDifficultyDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.featured.FeaturedQuizDTO;
+import edu.ntnu.idatt2105.trivium.dto.quiz.library.QuizLibraryDTO;
 import edu.ntnu.idatt2105.trivium.dto.quiz.result.QuizResultDTO;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
 import edu.ntnu.idatt2105.trivium.model.quiz.difficulty.QuizDifficulty;
 import edu.ntnu.idatt2105.trivium.model.quiz.featured.FeaturedQuiz;
+import edu.ntnu.idatt2105.trivium.model.quiz.library.QuizLibrary;
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
 import edu.ntnu.idatt2105.trivium.search.Specifications;
 import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
@@ -74,6 +76,13 @@ public class QuizController {
   public ResponseEntity<List<QuizResultDTO>> getUserResults(@PathVariable long userId) {
     List<QuizResult> results = quizService.getUserResults(userId);
     List<QuizResultDTO> resultDTO = results.stream().map(result -> modelMapper.map(result, QuizResultDTO.class)).toList();
+    return ResponseEntity.ok(resultDTO);
+  }
+
+  @GetMapping("/library/{userId}")
+  public ResponseEntity<QuizLibraryDTO> getLibrary(@PathVariable long userId) {
+    QuizLibrary library = quizService.getLibrary(userId);
+    QuizLibraryDTO resultDTO = modelMapper.map(library, QuizLibraryDTO.class);
     return ResponseEntity.ok(resultDTO);
   }
 
