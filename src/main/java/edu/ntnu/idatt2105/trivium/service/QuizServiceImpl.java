@@ -103,6 +103,7 @@ public class QuizServiceImpl implements QuizService {
   private int handleAnswer(MultipleChoiceQuestion question, Answer answer) {
     try {
       String a = answer.getAnswer();
+      if (a.length() < 3) return 0;
       String[] tokens = a.substring(1, a.length() - 1).split(",");
       List<Long> selectedOptions = new ArrayList<>();
       for (String token : tokens) {
