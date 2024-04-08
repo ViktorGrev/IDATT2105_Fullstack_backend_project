@@ -306,7 +306,7 @@ public class QuizServiceImpl implements QuizService {
    */
   @Override
   public List<QuizResult> getLeaderboard(long id) {
-    return resultRepository.findByQuizIdOrderByScoreDesc(id);
+    return resultRepository.findByQuizIdOrderByScoreDesc(id, Pageable.ofSize(10));
   }
 
   /**

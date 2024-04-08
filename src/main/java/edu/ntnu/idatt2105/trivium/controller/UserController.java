@@ -1,7 +1,11 @@
 package edu.ntnu.idatt2105.trivium.controller;
 
+import edu.ntnu.idatt2105.trivium.dto.user.FeedbackDTO;
+import edu.ntnu.idatt2105.trivium.dto.user.SendFeedbackDTO;
 import edu.ntnu.idatt2105.trivium.dto.user.UserDTO;
 import edu.ntnu.idatt2105.trivium.exception.ExceptionResponse;
+import edu.ntnu.idatt2105.trivium.exception.user.PermissionDeniedException;
+import edu.ntnu.idatt2105.trivium.model.user.Feedback;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import edu.ntnu.idatt2105.trivium.search.Specifications;
 import edu.ntnu.idatt2105.trivium.security.AuthIdentity;
@@ -18,6 +22,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -76,7 +81,7 @@ public class UserController {
       @ApiResponse(responseCode = "404", description = "User not found",
           content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
   })
-  @GetMapping("/{username}")
+  @GetMapping(value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserDTO> getUserByUsername(@PathVariable @Username String username) {
     User user = userService.findByUsername(username);
     UserDTO userDTO = modelMapper.map(user, UserDTO.class);
@@ -95,7 +100,7 @@ public class UserController {
       @ApiResponse(responseCode = "404", description = "User not found",
           content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
   })
-  @GetMapping("/self")
+  @GetMapping(value = "/self", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserDTO> getSelf(@AuthenticationPrincipal AuthIdentity identity) {
     User user = userService.findById(identity.getId());
     UserDTO userDTO = modelMapper.map(user, UserDTO.class);
@@ -113,7 +118,7 @@ public class UserController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Success")
   })
-  @PostMapping(value = "/search")
+  @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<UserDTO>> search(@RequestParam(required = false) String username, Pageable pageable) {
     Specification<User> spec = Specification.where(null);
     if (username != null) {
@@ -122,5 +127,41 @@ public class UserController {
     Page<User> users = userService.search(spec, pageable);
     List<UserDTO> userDTOList = users.map(quiz -> modelMapper.map(quiz, UserDTO.class)).toList();
     return ResponseEntity.ok(userDTOList);
+  }
+
+  /**
+   * Sends feedback from a user.
+   *
+   * @param identity The authenticated user's identity.
+   */
+  @Operation(summary = "Send feedback", description = "Send feedback from a user.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success")
+  })
+  @PostMapping("/feedback")
+  public ResponseEntity<Void> sendFeedback(@AuthenticationPrincipal AuthIdentity identity,
+                                           @Validated @RequestBody SendFeedbackDTO feedbackDTO) {
+    userService.sendFeedback(identity.getId(), feedbackDTO.getEmail(), feedbackDTO.getMessage());
+    return ResponseEntity.ok().build();
+  }
+
+  /**
+   * Get all feedback.
+   *
+   * @param identity The authenticated user's identity.
+   * @return A list containing all feedback.
+   */
+  @Operation(summary = "Send feedback", description = "Send feedback from a user.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success")
+  })
+  @GetMapping("/feedback")
+  public ResponseEntity<List<FeedbackDTO>> getFeedback(@AuthenticationPrincipal AuthIdentity identity) {
+    if (!identity.getRole().equalsIgnoreCase("ADMIN")) {
+      throw new PermissionDeniedException();
+    }
+    List<Feedback> feedbacks = userService.getFeedback();
+    List<FeedbackDTO> feedbackDTOS = feedbacks.stream().map(quiz -> modelMapper.map(quiz, FeedbackDTO.class)).toList();
+    return ResponseEntity.ok(feedbackDTOS);
   }
 }

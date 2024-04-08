@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.trivium.repository;
 
 import edu.ntnu.idatt2105.trivium.model.quiz.result.QuizResult;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,7 +30,7 @@ public interface QuizResultRepository extends JpaRepository<QuizResult, Long> {
    * @param id The ID of the quiz.
    * @return A list of quiz results for the quiz, ordered by score in descending order.
    */
-  List<QuizResult> findByQuizIdOrderByScoreDesc(long id);
+  List<QuizResult> findByQuizIdOrderByScoreDesc(long id, Pageable pageable);
 
   /**
    * Retrieves all quiz results for a quiz.

@@ -4,7 +4,9 @@ import edu.ntnu.idatt2105.trivium.exception.auth.InvalidCredentialsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserAlreadyExistsException;
 import edu.ntnu.idatt2105.trivium.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.user.UsernameTakenException;
+import edu.ntnu.idatt2105.trivium.model.user.Feedback;
 import edu.ntnu.idatt2105.trivium.model.user.User;
+import edu.ntnu.idatt2105.trivium.repository.FeedbackRepository;
 import edu.ntnu.idatt2105.trivium.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +32,9 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private FeedbackRepository feedbackRepository;
 
   /**
    * Registers a new user with the provided username and password.
@@ -154,5 +159,35 @@ public class UserServiceImpl implements UserService {
   @Override
   public Page<User> search(Specification<User> spec, Pageable pageable) {
     return userRepository.findAll(spec, pageable);
+  }
+
+  /**
+   * Sends feedback from a user.
+   *
+   * @param userId The ID of the user.
+   * @param email The email.
+   * @param message The message.
+   */
+  @Override
+  public void sendFeedback(long userId, String email, String message) {
+    Optional<User> optionalUser = userRepository.findById(userId);
+    if (optionalUser.isPresent()) {
+      User user = optionalUser.get();
+      Feedback feedback = Feedback.builder().email(email).message(message)
+          .sender(user).build();
+      feedbackRepository.save(feedback);
+    } else {
+      throw new UserNotFoundException();
+    }
+  }
+
+  /**
+   * Get all feedback.
+   *
+   * @return A list containing all feedback.
+   */
+  @Override
+  public List<Feedback> getFeedback() {
+    return feedbackRepository.findAll();
   }
 }

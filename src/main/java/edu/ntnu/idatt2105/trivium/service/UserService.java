@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.trivium.service;
 
+import edu.ntnu.idatt2105.trivium.model.user.Feedback;
 import edu.ntnu.idatt2105.trivium.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,4 +75,20 @@ public interface UserService {
    * @return A page containing the users that match the specified criteria.
    */
   Page<User> search(Specification<User> spec, Pageable pageable);
+
+  /**
+   * Sends feedback from a user.
+   *
+   * @param userId The ID of the user.
+   * @param email The email.
+   * @param message The message.
+   */
+  void sendFeedback(long userId, String email, String message);
+
+  /**
+   * Get all feedback.
+   *
+   * @return A list containing all feedback.
+   */
+  List<Feedback> getFeedback();
 }
