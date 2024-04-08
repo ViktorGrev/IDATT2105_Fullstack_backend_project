@@ -44,7 +44,7 @@ public class OptionTextValidatorTest {
 
   @Test
   void testOptionTextAtMinimumLength() {
-    String minOptionText = "T";
+    String minOptionText = "";
     assertFalse(optionTextValidator.isValid(minOptionText, context));
   }
 

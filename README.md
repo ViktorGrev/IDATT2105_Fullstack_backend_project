@@ -28,11 +28,24 @@ This project uses Java Persistence API (JPA) to access data sources. It is recom
 1. Install [Docker](https://www.docker.com/get-started/)
 2. Run a MySQL container using `docker run -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest`
 3. Log in to the MySQL container and create a database
-4. Navigate to [application.properties](src/main/resources/application.properties) and make sure that `spring.datasource.url` is defined on the following format: `jdbc:mysql://localhost:3306/{database}`. 
+4. Navigate to [application.properties](src/main/resources/application.properties) and make sure that `spring.datasource.url` is defined on the following format: `jdbc:mysql://localhost:3306/{database}?createDatabaseIfNotExist=true`. 
 
 ### CI
 
 This project utilizes GitHub Actions for CI. The workflow defined in the [.github/workflows](.github/workflows) directory ensures that the code is compiled, tested, and built automatically on each push to the main branch.
+
+### Testing
+
+Testing has been an integral part of the development process. The project utilizes both unit and integration tests to ensure the correctness and reliability of the codebase. Test classes are located in [src/test/java](src/test/java). To run the tests, execute `mvn test`
+
+Test data to import to the database can be located in [sql-data](sql-data). This will create three users, each of which has created a quiz:
+
+| Name     | Bobby  | Alice  | Peter  |
+|----------|--------|--------|--------|
+| Password | Bobby1 | Alice1 | Peter1 | 
+
+#### Known issues
+There are known issues when testing some of the classes involving repositories. To resolve these issues, try to comment out `spring.jpa.database-platform` before running the tests.
 
 ### License
 

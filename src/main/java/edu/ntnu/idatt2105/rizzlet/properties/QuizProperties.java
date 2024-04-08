@@ -44,7 +44,7 @@ public final class QuizProperties {
 
   // Option
   public static final String OPTION_TEXT_EMPTY = "Option text is required";
-  public static final int OPTION_TEXT_LEN_MIN = 4;
+  public static final int OPTION_TEXT_LEN_MIN = 1;
   public static final int OPTION_TEXT_LEN_MAX = 16;
   public static final String OPTION_TEXT_LEN_MSG = "Option text must be between " + OPTION_TEXT_LEN_MIN + " and " + OPTION_TEXT_LEN_MAX + " characters";
 
