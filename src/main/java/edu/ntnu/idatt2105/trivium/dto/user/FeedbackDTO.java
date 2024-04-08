@@ -7,5 +7,5 @@ public class FeedbackDTO {
 
   private String email;
   private String message;
-  private UserDTO user;
+  private UserDTO sender;
 }

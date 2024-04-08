@@ -30,7 +30,7 @@ public interface QuizResultRepository extends JpaRepository<QuizResult, Long> {
    * @param id The ID of the quiz.
    * @return A list of quiz results for the quiz, ordered by score in descending order.
    */
-  List<QuizResult> findByQuizIdOrderByScoreDesc(long id, Pageable pageable);
+  List<QuizResult> findByQuizIdOrderByScoreDesc(long id);
 
   /**
    * Retrieves all quiz results for a quiz.
