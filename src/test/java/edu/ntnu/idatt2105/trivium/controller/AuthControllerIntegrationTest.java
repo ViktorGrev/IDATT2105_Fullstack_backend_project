@@ -44,7 +44,7 @@ public class AuthControllerIntegrationTest {
   private TokenProperties tokenProperties;
 
   @Test
-  public void whenPostLogin_thenReturnToken() throws Exception {
+  public void whenPostLoginThenReturnToken() throws Exception {
     String username = "username";
     String password = "Password1";
     CredentialsRequest request = new CredentialsRequest(username, password);
@@ -62,7 +62,7 @@ public class AuthControllerIntegrationTest {
   }
 
   @Test
-  public void whenPostLogin_withInvalidCredentials_thenReturnUnauthorized() throws Exception {
+  public void whenPostLoginWithInvalidCredentialsThenReturnUnauthorized() throws Exception {
     String username = "username";
     String password = "Password2";
     CredentialsRequest request = new CredentialsRequest(username, password);
@@ -76,7 +76,7 @@ public class AuthControllerIntegrationTest {
   }
 
   @Test
-  public void whenPostSignup_thenReturnToken() throws Exception {
+  public void whenPostSignupThenReturnToken() throws Exception {
     String username = "username";
     String password = "Password1";
     CredentialsRequest request = new CredentialsRequest(username, password);
@@ -94,7 +94,7 @@ public class AuthControllerIntegrationTest {
   }
 
   @Test
-  public void whenPostSignup_withExistingUser_thenReturnConflict() throws Exception {
+  public void whenPostSignupWithExistingUserThenReturnConflict() throws Exception {
     String username = "existing";
     String password = "Password1";
     CredentialsRequest request = new CredentialsRequest(username, password);

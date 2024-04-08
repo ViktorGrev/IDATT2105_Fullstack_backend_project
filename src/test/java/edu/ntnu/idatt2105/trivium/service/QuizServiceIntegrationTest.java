@@ -4,7 +4,6 @@ import edu.ntnu.idatt2105.trivium.exception.quiz.QuizNotFoundException;
 import edu.ntnu.idatt2105.trivium.exception.quiz.answer.InvalidAnswerFormatException;
 import edu.ntnu.idatt2105.trivium.model.quiz.Quiz;
 import edu.ntnu.idatt2105.trivium.model.quiz.answer.Answer;
-import edu.ntnu.idatt2105.trivium.model.quiz.leaderboard.LeaderboardEntry;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.FillTheBlankQuestion;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.MultipleChoiceQuestion;
 import edu.ntnu.idatt2105.trivium.model.quiz.question.Question;
@@ -19,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -50,26 +50,22 @@ public class QuizServiceIntegrationTest {
   }
 
   @Test
-  public void testCreateQuiz_Success() {
-    // Arrange
+  public void testCreateQuizSuccess() {
     long userId = 1L;
     User mockUser = new User("testuser", "testpassword");
     Quiz quiz = new Quiz();
     when(userService.findById(userId)).thenReturn(mockUser);
     when(quizRepository.save(any(Quiz.class))).thenReturn(quiz);
 
-    // Act
     Quiz createdQuiz = quizService.createQuiz(userId, Arrays.asList(), quiz);
 
-    // Assert
     assertNotNull(createdQuiz);
     assertEquals(mockUser, createdQuiz.getCreator());
     verify(quizRepository, times(1)).save(any(Quiz.class));
   }
 
   @Test
-  public void testAnswer_Success() {
-    // Arrange
+  public void testAnswerSuccess() {
     long userId = 1L;
     long quizId = 1L;
     List<Answer> answers = new ArrayList<>();
@@ -79,32 +75,26 @@ public class QuizServiceIntegrationTest {
     when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
     when(resultRepository.save(any(QuizResult.class))).thenReturn(new QuizResult());
 
-    // Act
     QuizResult result = quizService.answer(userId, quizId, answers);
 
-    // Assert
     assertNotNull(result);
     verify(resultRepository, times(1)).save(any(QuizResult.class));
   }
 
   @Test
-  public void testGetResult_Success() {
-    // Arrange
+  public void testGetResultSuccess() {
     long resultId = 1L;
     QuizResult mockResult = new QuizResult();
     when(resultRepository.findById(resultId)).thenReturn(Optional.of(mockResult));
 
-    // Act
     QuizResult result = quizService.getResult(resultId);
 
-    // Assert
     assertNotNull(result);
     assertEquals(mockResult, result);
   }
 
   @Test
-  public void testCalculateScore_TrueFalse_Success() {
-    // Arrange
+  public void testCalculateScoreTrueFalseSuccess() {
     Quiz quiz = new Quiz();
     Answer answer = new Answer();
     answer.setQuestion(1L);
@@ -112,16 +102,13 @@ public class QuizServiceIntegrationTest {
     List<Answer> answers = List.of(answer);
     quiz.setQuestions(Arrays.asList(TrueFalseQuestion.builder().id(1L).text("Is the sky blue?").isTrue(true).build()));
 
-    // Act
     int score = quizService.calculateScore(quiz, answers);
 
-    // Assert
     assertEquals(1, score);
   }
 
   @Test
-  public void testCalculateScore_MultipleChoice_Success() {
-    // Arrange
+  public void testCalculateScoreMultipleChoiceSuccess() {
     Quiz quiz = new Quiz();
     Answer answer = new Answer();
     answer.setQuestion(1L);
@@ -130,16 +117,13 @@ public class QuizServiceIntegrationTest {
     MultipleChoiceQuestion question =MultipleChoiceQuestion.builder().id(1L).text("What is 1+1?").options(List.of(new MultipleChoiceQuestion.Option(1L, "2", true))).build();
     quiz.setQuestions(Arrays.asList(question));
 
-    // Act
     int score = quizService.calculateScore(quiz, answers);
 
-    // Assert
     assertEquals(1, score);
   }
 
   @Test
-  public void testCalculateScore_FillTheBlank_Success() {
-    // Arrange
+  public void testCalculateScoreFillTheBlankSuccess() {
     Quiz quiz = new Quiz();
     Answer answer = new Answer();
     answer.setQuestion(1L);
@@ -148,16 +132,13 @@ public class QuizServiceIntegrationTest {
     FillTheBlankQuestion question = FillTheBlankQuestion.builder().id(1L).text("The color of the sky is ___").solution("blue").build();
     quiz.setQuestions(Arrays.asList(question));
 
-    // Act
     int score = quizService.calculateScore(quiz, answers);
 
-    // Assert
     assertEquals(1, score);
   }
 
   @Test
-  public void testCalculateScore_InvalidQuestionType_ExceptionThrown() {
-    // Arrange
+  public void testCalculateScoreInvalidQuestionTypeExceptionThrown() {
     Quiz quiz = new Quiz();
     Answer answer = new Answer();
     answer.setQuestion(1L);
@@ -171,38 +152,31 @@ public class QuizServiceIntegrationTest {
     };
     quiz.setQuestions(Arrays.asList(question));
 
-    // Act + Assert
     assertThrows(InvalidAnswerFormatException.class, () -> quizService.calculateScore(quiz, answers));
   }
 
   @Test
-  public void testGetQuiz_Success() {
-    // Arrange
+  public void testGetQuizSuccess() {
     long quizId = 1L;
     Quiz mockQuiz = new Quiz();
     when(quizRepository.findById(quizId)).thenReturn(Optional.of(mockQuiz));
 
-    // Act
     Quiz quiz = quizService.getQuiz(quizId);
 
-    // Assert
     assertNotNull(quiz);
     assertEquals(mockQuiz, quiz);
   }
 
   @Test
-  public void testGetQuiz_QuizNotFound() {
-    // Arrange
+  public void testGetQuizQuizNotFound() {
     long quizId = 1L;
     when(quizRepository.findById(quizId)).thenReturn(Optional.empty());
 
-    // Act + Assert
     assertThrows(QuizNotFoundException.class, () -> quizService.getQuiz(quizId));
   }
 
   @Test
-  public void testGetLeaderboard_Success() {
-    // Arrange
+  public void testGetLeaderboardSuccess() {
     long quizId = 1L;
     QuizResult result1 = new QuizResult();
     result1.setScore(10);
@@ -211,10 +185,8 @@ public class QuizServiceIntegrationTest {
     List<QuizResult> mockResults = List.of(result1, result2);
     when(resultRepository.findByQuizIdOrderByScoreDesc(quizId)).thenReturn(mockResults);
 
-    // Act
     List<QuizResult> leaderboard = quizService.getLeaderboard(quizId);
 
-    // Assert
     assertNotNull(leaderboard);
     assertEquals(2, leaderboard.size());
     assertEquals(10, leaderboard.get(0).getScore());
@@ -222,15 +194,12 @@ public class QuizServiceIntegrationTest {
   }
 
   @Test
-  public void testGetLeaderboard_NoResults_ReturnsEmptyList() {
-    // Arrange
+  public void testGetLeaderboardNoResultsReturnsEmptyList() {
     long quizId = 1L;
     when(resultRepository.findByQuizIdOrderByScoreDesc(quizId)).thenReturn(new ArrayList<>());
 
-    // Act
     List<QuizResult> leaderboard = quizService.getLeaderboard(quizId);
 
-    // Assert
     assertNotNull(leaderboard);
     assertTrue(leaderboard.isEmpty());
   }
