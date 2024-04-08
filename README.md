@@ -18,7 +18,7 @@ Before running the backend project, ensure you have the following installed:
 To install and run the backend project:
 
 1. Clone this repository to your local machine.
-2. Set up the database and update the database configuration in the `application.properties` file.
+2. Set up a database and update the database configuration in the `application.properties` file. (See the below point for more information)
 3. Build the project using Maven: `mvn clean install`.
 4. Run the application: `mvn spring-boot:run`.
 
@@ -26,9 +26,9 @@ To install and run the backend project:
 
 This project uses Java Persistence API (JPA) to access data sources. It is recommended to run a MySQL image in a docker container by following these steps:
 1. Install [Docker](https://www.docker.com/get-started/)
-2. Run a MySQL container using `docker run -d mysql:latest`
+2. Run a MySQL container using `docker run -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest`
 3. Log in to the MySQL container and create a database
-4. Navigate to [application.properties](src/main/resources/application.properties) to make sure that the `spring.datasource.url` property is defined on the following format: `jdbc:mysql://localhost:3306/{database}`
+4. Navigate to [application.properties](src/main/resources/application.properties) and make sure that `spring.datasource.url` is defined on the following format: `jdbc:mysql://localhost:3306/{database}`. 
 
 ### CI
 
